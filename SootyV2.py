@@ -9,6 +9,7 @@ mainMenu_dict = {
   1: lambda: decoderMenu(),
   2: lambda: dnsMenu(),
   3: lambda: apiMenu(),
+  4: lambda: extraMenu()
 }
 
 decoders_dict = {
@@ -32,6 +33,13 @@ api_dict = {
   }
 }
 
+extra_dict = {
+  0: {
+    "name": "Exit to Main Menu",
+    "run": lambda: mainMenu()
+  }
+}
+
 def mainMenu():
   print("\n ------------------------------------- ")
   print("\n           S  O  O  T  Y  V 2          ")
@@ -40,6 +48,7 @@ def mainMenu():
   print("\n OPTION 1: Decoders (PP, URL, SafeLinks) ")
   print(" OPTION 2: DNS Tools ")
   print(" OPTION 3: API Tools (require API keys)")
+  print(" OPTION 4: Extra (Free online lookups and tools)")
   print("\n OPTION 0: Exit Tool")
   val = int(input(">> "))
   if val not in mainMenu_dict:
@@ -99,12 +108,30 @@ def apiMenu():
   else:
     api_dict[val]['run']()
 
+def extraMenu():
+  print("\n ------------------------------ ")
+  print("           E X T R A        ")
+  print(" ------------------------------ ")
+  print(" What would you like to do? \n")
+  for item in extra_dict.keys():
+    if item == 0:
+      continue
+    print(f" OPTION {item}: {extra_dict[item]['name']}")
+  print("\n OPTION 0: Exit to Main Menu")
+  val = int(input(">> "))
+  if val not in extra_dict:
+    print("Invalid value specified")
+    extraMenu()
+  else:
+    extra_dict[val]['run']()
+
 def importModules():
   print("Importing Modules")
   directory_path = os.path.dirname(os.path.abspath(__file__))
   directories = [os.path.join(directory_path, 'Plugins', 'Decoders'),
                  os.path.join(directory_path, 'Plugins', 'DNS'),
-                 os.path.join(directory_path, 'Plugins', 'API')]
+                 os.path.join(directory_path, 'Plugins', 'API'),
+                 os.path.join(directory_path, 'Plugins', 'Extra')]
   
   for dir in directories:
     files = os.listdir(dir)
@@ -132,6 +159,8 @@ def importModules():
               dns_dict[idx+1] = item
             elif dir.endswith("API"):
               api_dict[idx+1] = item
+            elif dir.endswith("Extra"):
+              extra_dict[idx+1] = item
 
 if __name__ == "__main__":
   importModules()
