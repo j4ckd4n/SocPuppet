@@ -9,6 +9,9 @@ class DNSLookup(Plugin.Plugin):
     self._dns = dns
 
   def run(self):
+    print("\n -------------------------------- ")
+    print("        D N S  L O O K U P        ")
+    print(" -------------------------------- ")
     if self._dns == None:
       self._dns = input(' Enter DNS value: ').strip()
 

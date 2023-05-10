@@ -9,6 +9,9 @@ class Base64Decoder(Plugin.Plugin):
     self._string = string if string is not None else None
 
   def run(self):
+    print("\n -------------------------------------- ")
+    print("        B A S E 6 4  D E C O D E        ")
+    print(" -------------------------------------- ")
     if self._string == None:
       self._string = str(input(" Enter Base64 String: ")).strip()
 

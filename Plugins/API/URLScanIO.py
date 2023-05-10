@@ -14,8 +14,8 @@ class URLScanIO(Plugin.Plugin):
       return
 
     print("\n --------------------------------- ")
-    print("\n        U R L S C A N . I O        ")
-    print("\n --------------------------------- ")
+    print("        U R L S C A N . I O        ")
+    print(" --------------------------------- ")
     if self._url == None:
       self._url = input('\nEnter url:').strip()
     

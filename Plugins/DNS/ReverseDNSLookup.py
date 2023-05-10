@@ -8,6 +8,9 @@ class ReverseDNSLookup(Plugin.Plugin):
     self._ip = ip
 
   def run(self):
+    print("\n ---------------------------------- ")
+    print("        D N S  R E V E R S E        ")
+    print(" ---------------------------------- ")
     if self._ip == None:
       self._ip = input(' Enter IP to check: ').strip()
 
