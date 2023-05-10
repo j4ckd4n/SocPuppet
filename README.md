@@ -10,6 +10,8 @@
 [![](readmeimages/tines_banner.png)](https://tines.io?utm_source=github&utm_medium=sponsorship&utm_campaign=sooty)
 # Overview
 
+This is a V2 version of Sooty which allows for "supposed" easier creation of modules. Still has plenty of bugs and refactoring needs.
+
 Sooty is a tool developed with the task of aiding SOC analysts with automating part of their workflow. One of the goals of Sooty is to perform as many of the routine checks as possible, allowing the analyst more time to spend on deeper analysis within the same time-frame. Details for many of Sooty's features can be found below.
 
 Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&utm_medium=sponsorship&utm_campaign=sooty)! The SOAR Platform for Enterprise Security Teams.
@@ -26,7 +28,7 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
 ![](readmeimages/repcheck.gif)
 
 
-## Sooty can Currently:
+## Sooty can Currently (May not be accurate with Sooty V2 at this time, will be updated in the near future):
   - Sanitise URL's to be safe to send in emails
   - Perform reverse DNS and DNS lookups
   - Perform reputation checks from:
