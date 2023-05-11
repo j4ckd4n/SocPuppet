@@ -16,7 +16,7 @@ class Cisco7Decoder(Plugin.Plugin):
     print("\tWARNING: May not be accurate.")
 
     if self._password == None:
-      self._password = input(' Enter Cisco Password 7: ').strip()
+      self._password = input('Enter Cisco Password 7: ').strip()
     
     try:
       index = int(self._password[:2], 16)

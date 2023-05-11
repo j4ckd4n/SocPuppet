@@ -9,7 +9,7 @@ class UnFurlURL(Plugin.Plugin):
 
   def run(self):
     if self._url == None:
-      self._url = input(' Enter a URL: ').strip()
+      self._url = input('Enter a URL: ').strip()
 
     unfurl_instance = core.Unfurl()
     unfurl_instance.add_to_queue(data_type='url', key=None, value=self._url)

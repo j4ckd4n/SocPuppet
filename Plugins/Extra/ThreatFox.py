@@ -27,28 +27,28 @@ class ThreatFox(Plugin.Plugin):
     content = res['data'][0]
 
     print(f"""
-  IoC: {content['ioc']}
-  Confidence: {content['confidence_level']}
-  Threat Type: {content['threat_type']}
-  Threat Type Description: {content['threat_type_desc']}
+IoC: {content['ioc']}
+Confidence: {content['confidence_level']}
+Threat Type: {content['threat_type']}
+Threat Type Description: {content['threat_type_desc']}
 
-  Malware: {content['malware_printable']}
-  Malware Alias: {content['malware_alias']}
-  Malpedia: {content['malware_malpedia']}
+Malware: {content['malware_printable']}
+Malware Alias: {content['malware_alias']}
+Malpedia: {content['malware_malpedia']}
 
-  First Seen: {content['first_seen']}
-  Reporter: {content['reporter']}
+First Seen: {content['first_seen']}
+Reporter: {content['reporter']}
     """)
 
     if content['tags']:
-      print("  Tags:")
+      print("Tags:")
       for tag in content['tags']:
         print(f"    - {tag}")
     
     if content['malware_samples']:
-      print("  Malware Samples:")
+      print("Malware Samples:")
       for sample in content['malware_samples']:
         print(f"""
-    - SHA256: {sample['sha256_hash']}
-    - Malware Bazaar Link: {sample['malware_bazaar']}
+  - SHA256: {sample['sha256_hash']}
+  - Malware Bazaar Link: {sample['malware_bazaar']}
         """)

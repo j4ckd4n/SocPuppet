@@ -13,11 +13,11 @@ class DNSLookup(Plugin.Plugin):
     print("        D N S  L O O K U P        ")
     print(" -------------------------------- ")
     if self._dns == None:
-      self._dns = input(' Enter DNS value: ').strip()
+      self._dns = input('Enter DNS value: ').strip()
 
     self._dns = re.sub("(http|https)://", "", self._dns)
     try:
       s = socket.gethostbyname(self._dns)
-      print('\n %s' % s)
+      print('\n%s' % s)
     except:
-      print(" IP for '%s' wa not found" % s)
+      print("IP for '%s' wa not found" % s)

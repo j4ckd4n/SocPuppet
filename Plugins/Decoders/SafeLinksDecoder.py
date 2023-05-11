@@ -12,7 +12,7 @@ class SafeLinksDecoder(Plugin.Plugin):
     print(" S A F E L I N K S   D E C O D E R  ")
     print(" --------------------------------- ")
     if self._url == None:
-      self._url = str(input(' Enter URL: ').strip())
+      self._url = str(input('Enter URL: ').strip())
     dcUrl = urllib.parse.unquote(self._url)
     dcUrl = dcUrl.replace('https://nam02.safelinks.protection.outlook.com/?url=', '')
     print(dcUrl)

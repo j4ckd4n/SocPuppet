@@ -13,7 +13,7 @@ class WhoIs(Plugin.Plugin):
   def run(self, val: str = None):
     if self._value == None:
       if val == None:
-        self._value = input(' Enter IP / Domain: ').strip()
+        self._value = input('Enter IP / Domain: ').strip()
       else:
         self._value = val
     
@@ -23,7 +23,7 @@ class WhoIs(Plugin.Plugin):
     if not self._ip_pat.match(self._value):
       try:
         s = socket.gethostbyname(self._value)
-        print('  Resolved Address: %s' % s)
+        print('\nResolved Address: %s' % s)
         self._value = s
       except: 
         print("Domain not found")
@@ -33,25 +33,25 @@ class WhoIs(Plugin.Plugin):
       w = w.lookup_whois()
       addr = str(w['nets'][0]['address'])
       addr = addr.replace('\n', ', ')
-      print("\n WHO IS REPORT:")
-      print("  CIDR:      " + str(w['nets'][0]['cidr']))
-      print("  Name:      " + str(w['nets'][0]['name']))
+      print("\nWHO IS REPORT:")
+      print("CIDR:      " + str(w['nets'][0]['cidr']))
+      print("Name:      " + str(w['nets'][0]['name']))
       # print("  Handle:    " + str(w['nets'][0]['handle']))
-      print("  Range:     " + str(w['nets'][0]['range']))
-      print("  Descr:     " + str(w['nets'][0]['description']))
-      print("  Country:   " + str(w['nets'][0]['country']))
-      print("  State:     " + str(w['nets'][0]['state']))
-      print("  City:      " + str(w['nets'][0]['city']))
-      print("  Address:   " + addr)
-      print("  Post Code: " + str(w['nets'][0]['postal_code']))
+      print("Range:     " + str(w['nets'][0]['range']))
+      print("Descr:     " + str(w['nets'][0]['description']))
+      print("Country:   " + str(w['nets'][0]['country']))
+      print("State:     " + str(w['nets'][0]['state']))
+      print("City:      " + str(w['nets'][0]['city']))
+      print("Address:   " + addr)
+      print("Post Code: " + str(w['nets'][0]['postal_code']))
       # print("  Emails:    " + str(w['nets'][0]['emails']))
-      print("  Created:   " + str(w['nets'][0]['created']))
-      print("  Updated:   " + str(w['nets'][0]['updated']))
+      print("Created:   " + str(w['nets'][0]['created']))
+      print("Updated:   " + str(w['nets'][0]['updated']))
 
       #self._writeToFile(w)
 
     except Exception as e:
-      print("\n Lookup did not find anything for '%s'" % self._value)
+      print("\nLookup did not find anything for '%s'" % self._value)
   
   def _writeToFile(self, w: dict):
     now = datetime.datetime.now() # current date and time

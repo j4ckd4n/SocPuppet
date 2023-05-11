@@ -12,6 +12,6 @@ class UnShortenURL(Plugin.Plugin):
     print("   U R L   U N S H O R T E N E R  ")
     print(" --------------------------------- ")
     if self._url == None:
-      self._url = str(input(' Enter URL: ').strip())
+      self._url = str(input('Enter URL: ').strip())
     req = requests.get(str('https://unshorten.me/s/' + self._url))
     print(req.text)

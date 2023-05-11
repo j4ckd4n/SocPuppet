@@ -58,7 +58,7 @@ class ProofPointDecoder(Plugin.Plugin):
     print(" P R O O F P O I N T D E C O D E R ")
     print(" --------------------------------- ")
     if self._url == None:
-      self._url = str(input(" Enter URL to decode: ")).strip()
+      self._url = str(input("Enter URL to decode: ")).strip()
 
     print(self._url)
     match = re.search(self._url_re, self._url)
@@ -67,16 +67,16 @@ class ProofPointDecoder(Plugin.Plugin):
       if match.group(1) == 'v1':
         links = self._decodev1(self._url)
         for each in links:
-          print('\n Decoded Link: %s' % each)
+          print('\nDecoded Link: %s' % each)
       elif match.group(1) == 'v2':
         links = self._decodev2(self._url)
         for each in links:
-          print('\n Decoded Link: %s' % each)
+          print('\nDecoded Link: %s' % each)
     
     if matchv3 is not None:
       if matchv3.group(1) == 'v3':
         links = self._decodev3(self._url)
         for each in links:
-          print('\n Decoded Link: %s' % each)
+          print('\nDecoded Link: %s' % each)
       else:
-        print(' No valid URL found in input: ', self._url)
+        print('No valid URL found in input: ', self._url)

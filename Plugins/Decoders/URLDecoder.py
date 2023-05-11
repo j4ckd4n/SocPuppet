@@ -13,7 +13,7 @@ class URLDecoder(Plugin.Plugin):
     print("       U R L   D E C O D E R      ")
     print(" --------------------------------- ")
     if self._url == None:
-      self._url = str(input(" Enter URL: ")).strip()
+      self._url = str(input("Enter URL: ")).strip()
 
     decodedUrl = urllib.parse.unquote(self._url)
     print(decodedUrl)

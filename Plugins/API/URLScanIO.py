@@ -10,7 +10,7 @@ class URLScanIO(Plugin.Plugin):
 
   def run(self):
     if self._api_key == None:
-      print(" No API Key found. Define it as an environment variable 'URLSCAN_IO_API_KEY'.")
+      print("No API Key found. Define it as an environment variable 'URLSCAN_IO_API_KEY'.")
       return
 
     print("\n --------------------------------- ")
@@ -71,4 +71,4 @@ class URLScanIO(Plugin.Plugin):
         print("Scan did not succeed, reason: %s\n\tDescription: %s" % (response['message'], response['description']))
     except Exception as e:
       print(e)
-      print(' Error reaching URLScan.io')
+      print('Error reaching URLScan.io')

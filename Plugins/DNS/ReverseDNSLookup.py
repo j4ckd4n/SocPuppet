@@ -12,10 +12,10 @@ class ReverseDNSLookup(Plugin.Plugin):
     print("        D N S  R E V E R S E        ")
     print(" ---------------------------------- ")
     if self._ip == None:
-      self._ip = input(' Enter IP to check: ').strip()
+      self._ip = input('Enter IP to check: ').strip()
 
     try:
       s = socket.gethostbyaddr(self._ip)
-      print('\n %s' % s[0])
+      print('\n%s' % s[0])
     except:
-      print(" Reverse Lookup for '%s' did not return a value." % s)
+      print("Reverse Lookup for '%s' did not return a value." % s)
