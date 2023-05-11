@@ -18,6 +18,6 @@ class DNSLookup(Plugin.Plugin):
     self._dns = re.sub("(http|https)://", "", self._dns)
     try:
       s = socket.gethostbyname(self._dns)
-      print('\n%s' % s)
+      print('\nDomain resolved to: %s' % s)
     except:
       print("IP for '%s' wa not found" % s)

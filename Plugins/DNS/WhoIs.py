@@ -11,6 +11,10 @@ class WhoIs(Plugin.Plugin):
     self._ip_pat = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
   def run(self, val: str = None):
+    print("\n ----------------------- ")
+    print("        W H O I S        ")
+    print(" ----------------------- ")
+
     if self._value == None:
       if val == None:
         self._value = input('Enter IP / Domain: ').strip()
@@ -33,7 +37,7 @@ class WhoIs(Plugin.Plugin):
       w = w.lookup_whois()
       addr = str(w['nets'][0]['address'])
       addr = addr.replace('\n', ', ')
-      print("\nWHO IS REPORT:")
+      print("\nWHOIS REPORT:")
       print("CIDR:      " + str(w['nets'][0]['cidr']))
       print("Name:      " + str(w['nets'][0]['name']))
       # print("  Handle:    " + str(w['nets'][0]['handle']))

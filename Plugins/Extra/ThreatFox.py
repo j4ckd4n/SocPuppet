@@ -6,10 +6,13 @@ class ThreatFox(Plugin.Plugin):
   def __init__(self, query: str = None, name: str = "Threat Fox Lookup"):
     super().__init__(name)
 
-    self._query = query if query is not None else None
+    self._query = query
     self._url = "https://threatfox-api.abuse.ch/api/v1/"
 
   def run(self):
+    print("\n ------------------------------- ")
+    print("        T H R E A T F O X        ")
+    print(" ------------------------------- ")
     if self._query == None:
       self._query = input("Enter an IP/URL: ").strip()
 

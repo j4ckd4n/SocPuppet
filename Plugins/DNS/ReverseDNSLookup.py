@@ -16,6 +16,6 @@ class ReverseDNSLookup(Plugin.Plugin):
 
     try:
       s = socket.gethostbyaddr(self._ip)
-      print('\n%s' % s[0])
+      print('\nLookup returned: %s' % s[0])
     except:
-      print("Reverse Lookup for '%s' did not return a value." % s)
+      print("Reverse Lookup for '%s' did not return a value." % self._ip)

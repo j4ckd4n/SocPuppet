@@ -4,11 +4,12 @@ import os, requests
 
 
 class VirusTotal(Plugin.Plugin):
-  def __init__(self, value: str = None, name: str = 'VirusTotal'):
+  def __init__(self, _fileHash: str = None, name: str = 'VirusTotal'):
     super().__init__(name)
 
     self._api_key = os.getenv("VT_API_TOKEN")
     self._vt_url = "https://www.virustotal.com/vtapi/v2/file/report"
+    self._fileHash = _fileHash
 
     self._options = {
       0: {
@@ -22,9 +23,10 @@ class VirusTotal(Plugin.Plugin):
     }
 
   def _hashRating(self):
-    fileHash = input("Enter Hash of File: ").strip()
+    if self._fileHash == None:
+      self._fileHash = input("Enter Hash of File: ").strip()
 
-    params = {'apikey': self._api_key, 'resource': fileHash}
+    params = {'apikey': self._api_key, 'resource': self._fileHash}
     response = requests.get(self._vt_url, params=params)
 
     try:
@@ -33,14 +35,15 @@ class VirusTotal(Plugin.Plugin):
         print("\nHash was not found in Malware Database")
       elif result['response_code'] == 1:
         print("VirusTotal Report: %d/%d detections found" % (result['positives'], result['total']))
-        print("  Report Link: https://www.virustotal.com/gui/file/%s/detection" % fileHash)
+        print("  Report Link: https://www.virustotal.com/gui/file/%s/detection" % self._fileHash)
     except Exception as e:
       print(e)
 
   def _hashDetails(self):
-    fileHash = input("Enter Hash of File: ").strip()
+    if self._fileHash == None:
+      self._fileHash = input("Enter Hash of File: ").strip()
 
-    params = {'apikey': self._api_key, 'resource': fileHash}
+    params = {'apikey': self._api_key, 'resource': self._fileHash}
     response = requests.get(self._vt_url, params=params)
 
     try:
@@ -70,6 +73,10 @@ class VirusTotal(Plugin.Plugin):
     print("\n --------------------------------- ")
     print("\n        V I R U S T O T A L        ")
     print("\n --------------------------------- ")
+    if self._fileHash is not None:
+      self._hashRating()
+      return
+    
     print("What would you like to do? \n")
     for item in self._options.keys():
       print(f"OPTION {item}: {self._options[item]['name']}")
