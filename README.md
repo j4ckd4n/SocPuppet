@@ -54,13 +54,13 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
   - Create dynamic email templates that can be used as a base for phishing triage response.(.msg only, .eml coming in future update) - Not Implemented
   - Perform analysis enrichment on phishing mails using the HaveIBeenPwned database, and can identify if an email address has been compromised in the past, when it happened and where the breach occurred. (Requires API Key). - Not Implemented
   - Submit URL's to [PhishTank](https://www.phishtank.com/). (see requirements) - Not Implemented
-  - [Unfurl](https://github.com/obsidianforensics/unfurl) URL's via the CLI version of Unfurl. - Not Implemented
+  - [Unfurl](https://github.com/obsidianforensics/unfurl) URL's via the CLI version of Unfurl.
   - See below for a full list and layout of currently available tools:
   
   
 ```
 └── Main Menu
-   ├── Sanitize URL's for use in emails - Not Implemented
+   ├── Sanitize URL's for use in emails
    |  └── URL Sanitizing Tool
    ├── Decoders
    |   ├── ProofPoint Decoder
@@ -69,7 +69,7 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
    |   ├── URL Unshortener
    |   ├── Base 64 Decoder
    |   ├── Cisco Password 7 Decoder
-   |   └── Unfurl URL (Not functional)
+   |   └── Unfurl URL
    ├── DNS Tools
    |   ├── Reverse DNS Lookup
    |   ├── DNS Lookup

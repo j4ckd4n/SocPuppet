@@ -1,4 +1,5 @@
 from Plugins.Plugin import Plugin
+from Plugins.URLSanitize import URLSanitize
 
 import importlib.util
 import os
@@ -7,10 +8,11 @@ import inspect
 # This may be possible to simplify
 mainMenu_dict = {
   0: lambda: exit(0),
-  1: lambda: decoderMenu(),
-  2: lambda: dnsMenu(),
-  3: lambda: apiMenu(),
-  4: lambda: extraMenu()
+  1: lambda: URLSanitize().run(),
+  2: lambda: decoderMenu(),
+  3: lambda: dnsMenu(),
+  4: lambda: apiMenu(),
+  5: lambda: extraMenu()
 }
 
 decoders_dict = {
@@ -46,10 +48,11 @@ def mainMenu():
   print("\n           S  O  O  T  Y  V 2          ")
   print("\n ------------------------------------- ")
   print(" What would you like to do? ")
-  print("\n OPTION 1: Decoders (PP, URL, SafeLinks) ")
-  print(" OPTION 2: DNS Tools ")
-  print(" OPTION 3: API Tools (require API keys)")
-  print(" OPTION 4: Extra (Free online lookups and tools)")
+  print("\n OPTION 1: Sanitize URL")
+  print(" OPTION 2: Decoders (PP, URL, SafeLinks) ")
+  print(" OPTION 3: DNS Tools ")
+  print(" OPTION 4: API Tools (require API keys)")
+  print(" OPTION 5: Extra (Free online lookups and tools)")
   print("\n OPTION 0: Exit Tool")
   val = int(input(">> "))
   if val not in mainMenu_dict:
