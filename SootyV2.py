@@ -4,6 +4,7 @@ import importlib.util
 import os
 import inspect
 
+# This may be possible to simplify
 mainMenu_dict = {
   0: lambda: exit(0),
   1: lambda: decoderMenu(),
@@ -135,6 +136,11 @@ def importModules():
   
   for dir in directories:
     files = os.listdir(dir)
+    if "__pycache__" in files:
+      files.remove("__pycache__")
+    
+    if "__init__.py" in files:
+      files.remove("__init__.py")
 
     for idx, file_name in enumerate(files):
       module_name = file_name.replace('.py', '')
