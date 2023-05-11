@@ -10,9 +10,9 @@
 [![](readmeimages/tines_banner.png)](https://tines.io?utm_source=github&utm_medium=sponsorship&utm_campaign=sooty)
 # Overview
 
-| This is a V2 version of Sooty which allows for "supposed" easier creation of modules. Still has plenty of bugs and refactoring needs.
+> This is a V2 version of Sooty which allows for "supposed" easier creation of modules. Still has plenty of bugs and refactoring needs.
 
-| Things that are not yet implemented in the new version have been marked with the " - Not Implemented" string.
+> Things that are not yet implemented in the new version have been marked with the " - Not Implemented" string.
 
 Sooty is a tool developed with the task of aiding SOC analysts with automating part of their workflow. One of the goals of Sooty is to perform as many of the routine checks as possible, allowing the analyst more time to spend on deeper analysis within the same time-frame. Details for many of Sooty's features can be found below.
 
@@ -35,6 +35,7 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
   - Perform reverse DNS and DNS lookups
   - Perform reputation checks from:
     - [VirusTotal](https://www.virustotal.com)
+    - [Malware Bazaar](https://bazaar.abuse.ch/)
     - [BadIP's](https://www.badips.com/) - Not Implemented
     - [Abuse IPDB](https://www.abuseipdb.com/) - Not Implemented
   - Identify if an address is potentially malicious, used for spam, web bots: - Not Implemented
@@ -62,6 +63,8 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
 └── Main Menu
    ├── Sanitize URL's for use in emails
    |  └── URL Sanitizing Tool
+   ├── Reputation Check
+   |  └── Perform a check against IPs, Domains, or Hashes
    ├── Decoders
    |   ├── ProofPoint Decoder
    |   ├── URL Decoder
@@ -77,9 +80,13 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
    ├── API (Requires API keys)
    |   ├── URLScan.io lookup
    |   ├── VirusTotal lookup
+   |   ├── GreyNoise lookup
    |   └── Shodan lookup
    ├── Extra's
    |   ├── InternetDB (Free Shodan)
+   |   ├── IP-API (IP Geo Location, rate limited without a key)
+   |   ├── Malware Bazaar (Abuse.ch)
+   |   ├── inQuest (limited queries without API)
    |   └── ThreatFox
    └── Exit
 ```
@@ -87,12 +94,13 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
 
 ![](readmeimages/email_analysis.gif)
 
-## Requirements and Installation
+## Requirements and Installation - May not be fully valid
  - [Python 3.x](https://www.python.org/)
- - Install all dependencies from the requirements.txt file. `pip install -r requirements.txt`
+ - Install all dependencies from the requirements.txt file. `pip install -r requirementsv2.txt`
  - Launch the tool by navigating to the main directory, and executing with `python Sooty.py`, or simply `Sooty.py` 
  - Several API Keys are required to have full functionality with Sooty. However, it will still function without these keys, just without the added functionality they provide. Links are found below:
    - [VirusTotal API Key](https://developers.virustotal.com/reference)
+   - [GreyNoise API Key](https://docs.greynoise.io/reference/get_v3-community-ip)
    - [URLScan.io API Key](https://urlscan.io/about-api/)
    - [AbuseIPDB API Key](https://www.abuseipdb.com/api)
    - [HaveIBeenPwned API Key](https://haveibeenpwned.com/API/Key)
