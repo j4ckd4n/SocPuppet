@@ -21,3 +21,8 @@ class DNSLookup(Plugin.Plugin):
       print('\nDomain resolved to: %s' % s)
     except:
       print("IP for '%s' wa not found" % s)
+
+
+"""
+File Analysis: - Attempts to fetch the file are unsuccessful due to S1 not having enough details on this executable. - The applications were executed by the users. - Did not observe malicious activity, appears to be benign. Analyst verdict: Appears to be the false positive at this time, the rule has been modified appropriately by SCSA
+"""
