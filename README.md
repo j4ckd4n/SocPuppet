@@ -6,58 +6,48 @@
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue)
 
 
-![](readmeimages/sooty_logo.png)
-[![](readmeimages/tines_banner.png)](https://tines.io?utm_source=github&utm_medium=sponsorship&utm_campaign=sooty)
 # Overview
 
-> This is a V2 version of Sooty which allows for "supposed" easier creation of modules. Still has plenty of bugs and refactoring needs.
+SocPuppet is a tool developed with the task of aiding SOC analysts with automating part of their workflow. One of the goals of SocPuppet is to perform as many of the routine checks as possible, allowing the analyst more time to spend on deeper analysis within the same time-frame. Details for many of SocPuppet's features can be found below.
 
-> Things that are not yet implemented in the new version have been marked with the " - Not Implemented" string.
-
-Sooty is a tool developed with the task of aiding SOC analysts with automating part of their workflow. One of the goals of Sooty is to perform as many of the routine checks as possible, allowing the analyst more time to spend on deeper analysis within the same time-frame. Details for many of Sooty's features can be found below.
-
-Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&utm_medium=sponsorship&utm_campaign=sooty)! The SOAR Platform for Enterprise Security Teams.
+This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) tool developed by [TheresAFewConors](https://github.com/TheresAFewConors).
 
 ## Contents
- - [Current Features](#sooty-can-currently)
- - [Requirements & Installation](#requirements-and-installation)
+ - [Current Features](#socpuppet-can-currently)
+ - [Requirements & Installation](#requirements-and-installation---may-not-be-fully-valid)
+ - [SocPuppetAI](#socpuppetai---experimental)
  - [Development](#development)
  - [Changelog](#changelog)
  - [Roadmap](#roadmap)
- - [Contributors](#contributors)
- 
- 
-![](readmeimages/repcheck.gif)
 
+## SocPuppet can currently:
+  - Sanitize URL's to be safe for sending emails.
+  - Perform reverse DNS and DNS lookups.
+  - Perform reputation checks:
+    - Hashes:
+      - [VirusTotal](https://www.virustotal.com/) - API Key Required
+      - [Malware Bazzar](https://bazaar.abuse.ch/)
+    - Domain and IP:
+      - Reverse DNS
+      - DNS Lookup
+      - [ThreatFox](https://threatfox.abuse.ch/browse/)
+      - [URLScan.io](https://urlscan.io/) - API Key Required
+      - [InternetDB](https://internetdb.shodan.io/)
+      - WhoIs
+      - [GreyNoise](https://viz.greynoise.io/) - API Key Required
+      - [Shodan](https://www.shodan.io/) - API Key Required
+      - [IP-API](https://ip-api.com/)
+      - [inQuest - Labs](https://labs.inquest.net/)
+  - Decode:
+    - ProofPoint URLs.
+    - UTF-8 Encoded URLs.
+    - Office SafeLink URLs.
+    - Base64 Strings.
+    - Cisco7 Passwords.
+  - Unshorten URL's that have been shortened by external services. (Limited to 10 requests per hour).
+  - [Unfurl](https://github.com/obsidianforensics/unfurl) URLs via the CLI version of Unfurl.
 
-## Sooty can Currently (May not be accurate with Sooty V2 at this time, will be updated in the near future):
-  - Sanitise URL's to be safe to send in emails
-  - Perform reverse DNS and DNS lookups
-  - Perform reputation checks from:
-    - [VirusTotal](https://www.virustotal.com)
-    - [Malware Bazaar](https://bazaar.abuse.ch/)
-    - [BadIP's](https://www.badips.com/) - Not Implemented
-    - [Abuse IPDB](https://www.abuseipdb.com/) - Not Implemented
-  - Identify if an address is potentially malicious, used for spam, web bots: - Not Implemented
-    - [Botvrij.eu](https://botvrij.eu) - Not Implemented
-    - [myip.ms](https://myip.ms) - Not Implemented
-    - [Firehol](https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/nixspam.ipset) - Not Implemented
-  - Check if an IP address is a TOR exit node - Not Implemented
-  - Decode Proofpoint URL's, UTF-8 encoded URLS, Office SafeLink URL's, Base64 Strings and Cisco7 Passwords.
-  - Get file hashes and compare them against [VirusTotal](https://www.virustotal.com) (see requirements)
-  - Perform WhoIs Lookups
-  - Check Usernames and Emails against [HaveIBeenPwned](https://haveibeenpwned.com) to see if a breach has occurred. (see requirements) - Not Implemented
-  - Simple analysis of emails to retrieve URL's, emails and header information. - Not Implemented
-  - Extract IP addresses from emails. - Not Implemented
-  - Unshorten URL's that have been shortened by external services. (Limited to 10 requests per hour)
-  - Query [URLScan.io](https://urlscan.io) for reputation reports.
-  - Analyze email addresses for known malicious activity and report on domain reputation utilising [EmailRep.io](https://emailrep.io) - Not Implemented
-  - Create dynamic email templates that can be used as a base for phishing triage response.(.msg only, .eml coming in future update) - Not Implemented
-  - Perform analysis enrichment on phishing mails using the HaveIBeenPwned database, and can identify if an email address has been compromised in the past, when it happened and where the breach occurred. (Requires API Key). - Not Implemented
-  - Submit URL's to [PhishTank](https://www.phishtank.com/). (see requirements) - Not Implemented
-  - [Unfurl](https://github.com/obsidianforensics/unfurl) URL's via the CLI version of Unfurl.
-  - See below for a full list and layout of currently available tools:
-  
+---
   
 ```
 └── Main Menu
@@ -86,30 +76,29 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
    |   ├── InternetDB (Free Shodan)
    |   ├── IP-API (IP Geo Location, rate limited without a key)
    |   ├── Malware Bazaar (Abuse.ch)
+   |   ├── SocPuppetAI - Experimental, uses [GPT4All](https://github.com/nomic-ai/gpt4all)
    |   ├── inQuest (limited queries without API)
    |   └── ThreatFox
    └── Exit
 ```
-![](https://github.com/TheresAFewConors/Sooty/blob/master/readmeimages/unfurl.PNG)
 
-![](readmeimages/email_analysis.gif)
+---
 
-## Requirements and Installation - May not be fully valid
- - [Python 3.x](https://www.python.org/)
- - Install all dependencies from the requirements.txt file. `pip install -r requirementsv2.txt`
- - Launch the tool by navigating to the main directory, and executing with `python Sooty.py`, or simply `Sooty.py` 
- - Several API Keys are required to have full functionality with Sooty. However, it will still function without these keys, just without the added functionality they provide. Links are found below:
-   - [VirusTotal API Key](https://developers.virustotal.com/reference)
-   - [GreyNoise API Key](https://docs.greynoise.io/reference/get_v3-community-ip)
-   - [URLScan.io API Key](https://urlscan.io/about-api/)
-   - [AbuseIPDB API Key](https://www.abuseipdb.com/api)
-   - [HaveIBeenPwned API Key](https://haveibeenpwned.com/API/Key)
-   - [PhishTank API Key](https://www.phishtank.com/api_info.php)
-   - [EMAILREP API KEY](https://emailrep.io/key)
- - Replace the corresponding key in the `example_config.yaml` file, and rename the file to `config.yaml`, example layout below:
- - For PhishTank support, an unique app name is also required as an additional field. Simply update the `config.yaml` file with your unique name.
- 
-![](readmeimages/example_config.png)
+## Requirements and Installation
+  - [Python 3.x](https://www.python.org/)
+  - Install all dependencies from the requirements.txt file. `pip install -r requirements.txt`
+  - Launch the tool by navigating to the main directory, and executing with `python SocPuppet.py`, or simply `SocPuppet.py` 
+  - Several API Keys are required to have full functionality with SocPuppet. However, it will still function without these keys, just without the added functionality they provide. Links are found below:
+    - [VirusTotal API Key](https://developers.virustotal.com/reference)
+    - [GreyNoise API Key](https://docs.greynoise.io/reference/get_v3-community-ip)
+    - [URLScan.io API Key](https://urlscan.io/about-api/)
+  - API keys are set via environment variables listed below:
+    - GreyNoise - `GREYNOISE_API_KEY`
+    - Shodan.io - `SHODAN_API_KEY`
+    - URL Scan - `URLSCAN_IO_API_KEY`
+    - VirusTotal - `VT_API_TOKEN`
+
+---
 
 ## Launch with Docker
 - docker build -t sooty . && docker run --rm -it sooty 
@@ -118,12 +107,36 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
  - To use the Reputation Checker with AbuseIPDB requires an [API Key](https://www.abuseipdb.com/api), replace the key `AB_API_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work.
  - To use the URLScan.io checker function with URLScan requires an [API Key](https://urlscan.io/about-api/), replace the key `URLSCAN_IO_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work. 
  - Use of the HaveIBeenPwned functionality requires an [API Key](https://haveibeenpwned.com/API/Key), replace the key `HIBP_API_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work. -->
- 
+
+---
+
+## SocPuppetAI - Experimental
+This is an experimental implementation of [GPT4All](https://github.com/nomic-ai/gpt4all) by Nomic AI.
+
+With the current implementation, the tool automatically attempts to download the `ggml-wizardLB-7B.q4_2` model. This particular model is based on Llama 7b and trained by Microsoft and Peking University. The `ggml-wizardLB-7B.q4_2` is 4GB in size and will take up 4GB of RAM during execution. During testing, I've observed that this model appears to been better a summarizing findings that other models supplied by the organziation. That said, you can check out available models on their [official](https://gpt4all.io/index.html) GPT4All website and use them here. You will have to modify the `self._gpt = gpt4all.GPT4all("ggml-wizardLM-7B.q4_2")` line of code to match the model you wish to use.
+
+The AI runs completely on your CPU which may take some time to give you a response in comparison to ChatGPT.
+
+> Due to this being a completely experimental model, you may or may not receive an expected output. In many cases, you may not even receive a response. That said
+
+### Commands
+
+> All commands must end with `eof` at this time, this does include the data you are pushing for the SocPuppet to analyse.
+
+#### `clear_context`
+This command will clear the context memory that is fed back into the AI model
+
+#### `exit_gpt`
+This command will exit the SocPuppetAI.
+
+#### `show_context`
+This command will give you the raw context array of what is being fed into the AI
+
 ## Development
 
 ### Want to contribute? Great!
 
-  #### Code Contributions
+#### Code Contributions
   - If you wish to work on a feature, leave a comment on the issue page and I will assign you to it.
   - Under the projects tab is a list of features that are waiting to be started / completed. 
   - All code modifications, enhancements or additions must be done through a pull request. 
@@ -131,54 +144,43 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
 
 ### Found a Bug? Show Me!
 
- #### Bugs and Issues
- - If an issue / bug is found, please open a ticket in the issue tracker and use the bug report template. Fill in this template and include any additional relevant information.
- - If you wish to work on a known bug, leave a comment on the issue page and open a Pull Request to track progress. I will assign you to it.
- - If there is an issue with installation or usage, use the supplied template and I will respond ASAP.
+#### Bugs and Issues
+  - If an issue / bug is found, please open a ticket in the issue tracker and use the bug report template. Fill in this template and include any additional relevant information.
+  - If you wish to work on a known bug, leave a comment on the issue page and open a Pull Request to track progress. I will assign you to it.
+  - If there is an issue with installation or usage, use the supplied template and I will respond ASAP.
 
- #### Requesting Features
- - New features / requests should start by opening an issue. Please use the accompanying template when creating a new issue. This helps track new features and prevent crossover. Attach any additional info that seems relevant if necessary. Before creating a new issue, please check the [Projects Tab](https://github.com/TheresAFewConors/Sooty/projects) to see if this issue has already been requested, or directly with the other open [issues.](https://github.com/TheresAFewConors/Sooty/issues)
- 
+
+---
+
 ## Changelog
 
-
-#### Version 1.3 - The Templating Update - Not Implemented
- - Added first iteration of dynamic email templates that generate based on Sooty's analysis, example below:
-![](readmeimages/templateGen.PNG)
-- Docker Image added
-- Unfurl added 
-
-#### Version 1.2 - The Phishing Update - Not Implemented
- - Added first iteration of the Phishing tool.
- - Able to analyze an email (outlook / .msg only tested at the moment) and retrieve emails, urls (Proofpoint decode if necessary) and extract info from headers. 
- - Extract IP's from body of email.
- - Reputation check on sender of email, and provide enriched information.
-
 #### Version 1.1 - The Reputation Update - Not Implemented
- - Improved Rep Checker
- - Added HaveIBeenPwned Functionality
- - Added DNS Tools and WhoIs Functionality
- - Added Hash and VirusTotal Checkers
- - Added Abuse IPDB, Tor Exit Node, BadIP's to Reputation Checker
+  - Improved Rep Checker
+  - Added DNS Tools and WhoIs Functionality
+  - Added Hash and VirusTotal Checkers
+  - Added Abuse IPDB, Tor Exit Node, BadIP's to Reputation Checker
  
 #### Version 1.0
- - Initial Release
- - URL and Proofpoint Decoder
- - Initial implementation of Reputation Checker
- - Sanitize links to be safe for email
+  - Initial Release
+  - URL and Proofpoint Decoder
+  - Initial implementation of Reputation Checker
+  - Sanitize links to be safe for email
 
-
+---
 
 ## Roadmap
   This is an outline of what features *will* be coming in future versions.
   
 #### Version 1.2 - The Phishing Update
   - Scan email attachments for malicious content, macros, files, scan hashes, etc.
+  - Ability to analyze an email, retrieve emails, urls and extract info from headers.
+  - Extract IPs from body of an email.
+  - Perform reputation checks on the sender of email and provide enriched information.
 
 #### Version 1.3 - The Templating Update
- - ~~Add dynamic email templates that generate based on Sooty's analysis.~~ Edit: Added
- - Verify MX Records
- - Perform DKIM Verification
+  - Add dynamic email templates that generate based on SocPuppet's analysis.
+  - Verify MX Records
+  - Perform DKIM Verification
 
 #### Version 1.4 - The PCAP Analysis Update
 - Add ability to analyze .pcap files and provide concise, enriched information.
@@ -186,30 +188,3 @@ Sooty is now proudly supported by [Tines.io](https://tines.io?utm_source=github&
 #### Version 1.x - The Case Update
   - Add a 'New Case' Feature, allowing output of the tool to be output to a txt file.
 
-
-
-## Contributors:
-
-#### Code Contributions:
- - [Aaron J Copley](https://github.com/aaronjcopley) for his modified version of [ProofPoint's code](https://files.mtstatic.com/site_6638/177/1?Expires=1570188425&Signature=QWXGWsG0AID7Nyilm8i3vL9ETfRVPCnSmGZA5RtEAPUduQ38Mxh1ReqY6vk-PSLfnPoF6YY76jLUUokZP1gnXSyLTyKIzsiS15f5k1IgY~kwZbekQ6wvMLqPTlM3RjxJbm~iLbPE9qg9W8aX09QhBganS91SwISCPrdJJRJnMko_&Key-Pair-Id=APKAJ5Y6AV4GI7A555NA) to decode ProofPoint URL's
- - [James Duarte](https://github.com/GarnetSunset) for adding a hash and auto-check option to the hashing function
- - [mrpnkt](https://github.com/mrpnkt) for adding the missing whois requirement to requirements.txt
- - [Gurulhu](https://github.com/Gurulhu) for adding the Base64 Decoder to the Decoders menu.
- - [AndThenEnteredAlex](https://github.com/andthenenteredalex) for adding the URLScan Function from URLScan.io
- - [Eric Kelson](https://github.com/ekelson-bcove) for fixing pywin32 requirement not necessary on Linux systems in requirements.txt.
- - [Jenetiks](https://github.com/jenetiks) for removing and tidying up duplicate imports that had accumulated over time, and for providing a toggle between public and private scans on URLScan.io
- - [Nikosch86](https://github.com/nikosch86) for fixing an issue with hexdigest not correctly storing a file hash.
- - [Naveci](https://github.com/naveci) for numerous bug fixes, QoL improvements, Cisco 7 Password Decoding, and introduced a workflow to helps with issues in future. Phishtank support has now also been added, and additional IP blacklists for the reputation checker. 
- - [MrMeeseeks2014](https://github.com/mrmeeseeks2014) fox fixing a bug relating to hash uploads.
- - [mrn42](https://github.com/mrn42) for adding Docker Support.
- - [Ryan Benson](https://github.com/obsidianforensics) for adding [Unfurl](https://github.com/obsidianforensics/unfurl) support to the decoders section.
- - [Nitin Mukesh](https://github.com/nitin-techie) identified and fixed a bug with the BadIP's reputation lookup, and creating a stored txt output of Sooty's analysis. 
- - [Sarthak](https://github.com/sarthak9426) for fixing an issue related to the emailrep API key.
- - [Lesander](https://github.com/lesander) who fixed an issue with bash not recognizing Sooty as an executable file.
-
-#### Documentation Contributors:
- - [Danielf-5](https://github.com/danielf-5) for improvements in the readability 
- - [Paralax](https://github.com/paralax) for fixing typo's in the readme.
- - [mrn42](https://github.com/mrn42) for adding Docker documentation to the readme
-
- ![](readmeimages/vt_hashchecker.gif)
