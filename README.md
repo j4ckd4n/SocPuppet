@@ -1,9 +1,8 @@
-[![Generic badge](https://img.shields.io/badge/Made%20with-Python-blue.svg?style=flat-square)](https://GitHub.com/theresafewconors/sooty)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg?style=flat-square)](https://GitHub.com/theresafewconors/sooty)
-[![GitHub contributors](https://img.shields.io/github/contributors/theresafewconors/sooty.svg?style=flat-square)](https://GitHub.com/theresafewconors/sooty/graphs/contributors/)
-[![Generic badge](https://img.shields.io/badge/Built%20For-SOC%20Analyst's-olive.svg?style=flat-square)](https://GitHub.com/theresafewconors/sooty)
-[![HitCount](http://hits.dwyl.io/theresafewconors/sooty.svg)](https://GitHub.com/theresafewconors/sooty)
-![Docker](https://img.shields.io/badge/Docker-Supported-blue)
+![Welcome](https://img.shields.io/badge/SocPuppet-Welcome!-red?style=for-the-badge&logo=appveyor)
+
+![GitHub Last Commit](https://img.shields.io/github/last-commit/j4ckd4n/SocPuppet)
+![GitHub issues](https://img.shields.io/github/issues-raw/j4ckd4n/SocPuppet)
+![GitHub repo size](https://img.shields.io/github/repo-size/j4ckd4n/SocPuppet)
 
 
 # Overview
