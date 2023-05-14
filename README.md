@@ -46,8 +46,6 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
     - Cisco7 Passwords.
   - Unshorten URL's that have been shortened by external services. (Limited to 10 requests per hour).
   - [Unfurl](https://github.com/obsidianforensics/unfurl) URLs via the CLI version of Unfurl.
-
----
   
 ```
 └── Main Menu
@@ -98,8 +96,6 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
     - URL Scan - `URLSCAN_IO_API_KEY`
     - VirusTotal - `VT_API_TOKEN`
 
----
-
 ## Launch with Docker
 - docker build -t sooty . && docker run --rm -it sooty 
  
@@ -107,8 +103,6 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
  - To use the Reputation Checker with AbuseIPDB requires an [API Key](https://www.abuseipdb.com/api), replace the key `AB_API_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work.
  - To use the URLScan.io checker function with URLScan requires an [API Key](https://urlscan.io/about-api/), replace the key `URLSCAN_IO_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work. 
  - Use of the HaveIBeenPwned functionality requires an [API Key](https://haveibeenpwned.com/API/Key), replace the key `HIBP_API_KEY` in the code with your own key. The tool will still function without this key, however this feature will not work. -->
-
----
 
 ## SocPuppetAI - Experimental
 This is an experimental implementation of [GPT4All](https://github.com/nomic-ai/gpt4all) by Nomic AI.
@@ -149,9 +143,6 @@ This command will give you the raw context array of what is being fed into the A
   - If you wish to work on a known bug, leave a comment on the issue page and open a Pull Request to track progress. I will assign you to it.
   - If there is an issue with installation or usage, use the supplied template and I will respond ASAP.
 
-
----
-
 ## Changelog
 
 #### Version 1.1 - The Reputation Update - Not Implemented
@@ -165,8 +156,6 @@ This command will give you the raw context array of what is being fed into the A
   - URL and Proofpoint Decoder
   - Initial implementation of Reputation Checker
   - Sanitize links to be safe for email
-
----
 
 ## Roadmap
   This is an outline of what features *will* be coming in future versions.
