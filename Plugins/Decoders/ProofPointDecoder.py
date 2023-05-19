@@ -12,7 +12,7 @@ class ProofPointDecoder(Plugin.Plugin):
     self._url_re = r'https://urldefense.proofpoint.com/(v[0-9])/'
     self._urlv3_re = r'urldefense.com/(v3)/'
   
-  def _decodev1(self, rewrittenurl):
+  def decodev1(self, rewrittenurl):
     match = re.search(r'u=(.+?)&k=', rewrittenurl)
 
     linksFoundList = []
@@ -26,7 +26,7 @@ class ProofPointDecoder(Plugin.Plugin):
         linksFoundList.append(url)
     return linksFoundList
 
-  def _decodev2(self, rewrittenurl):
+  def decodev2(self, rewrittenurl):
     match = re.search(r'u=(.+?)&[dc]=', rewrittenurl)
 
     linksFoundList = []
@@ -42,7 +42,7 @@ class ProofPointDecoder(Plugin.Plugin):
         linksFoundList.append(url)
     return linksFoundList
 
-  def _decodev3(self, rewrittenurl):
+  def decodev3(self, rewrittenurl):
     match = re.search(r'v3/__(?P<url>.+?)__;', rewrittenurl)
     linksFoundList = []
     if match:
@@ -65,17 +65,17 @@ class ProofPointDecoder(Plugin.Plugin):
     matchv3 = re.search(self._urlv3_re, self._url)
     if match:
       if match.group(1) == 'v1':
-        links = self._decodev1(self._url)
+        links = self.decodev1(self._url)
         for each in links:
           print('\nDecoded Link: %s' % each)
       elif match.group(1) == 'v2':
-        links = self._decodev2(self._url)
+        links = self.decodev2(self._url)
         for each in links:
           print('\nDecoded Link: %s' % each)
     
     if matchv3 is not None:
       if matchv3.group(1) == 'v3':
-        links = self._decodev3(self._url)
+        links = self.decodev3(self._url)
         for each in links:
           print('\nDecoded Link: %s' % each)
       else:

@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-from Plugins.DNS import DNSLookup, ReverseDNSLookup, WhoIs
+from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs
 from Plugins.Extra import ThreatFox, InternetDB, IPAPI, inQuest, MalwareBazaar
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
@@ -15,6 +15,36 @@ class ReputationCheck(Plugin.Plugin):
     self._sha1_pattern = r"\b([a-fA-F\d]{40})\b"
     self._sha256_pattern = r"\b([a-fA-F\d]{64})\b"
 
+  def _performCheck(self, value, skip_url_scan = False):
+    if re.search(self._md5_pattern, value) or re.search(self._sha1_pattern, value) or re.search(self._sha256_pattern, value):
+      print("Hash detected")
+      VirusTotal.VirusTotal(value).run()
+      MalwareBazaar.MalwareBazaar(value).run()
+      return
+
+    if not self._ip_pat.match(value):
+      if not skip_url_scan:  
+        URLScanIO.URLScanIO(value).run()
+      value = re.sub("(http|https)://", "", value)
+      print("Domain detected, attemting to resolve...")
+      DNSLookup.DNSLookup(value).run()
+      try:
+        value = socket.gethostbyname(value)
+      except:
+        print(f"IP for '{value}' was not found")
+        return
+              
+    ReverseDNSLookup.ReverseDNSLookup(value).run()
+    ThreatFox.ThreatFox(value).run()
+    InternetDB.InternetDB(value).run()
+    WhoIs.WhoIs(value).run()
+    GreyNoise.GreyNoise(value).run()
+    ShodanLookup.ShodanLookup(value).run()
+    IPAPI.IPAPI(value).run()
+
+    # These take some time to complete.
+    inQuest.inQuest(value).run()
+
   def run(self):
     print("\n -------------------------------------------- ")
     print("        R E P U T A T I O N  C H E C K        ")
@@ -22,30 +52,4 @@ class ReputationCheck(Plugin.Plugin):
     if self._value == None:
       self._value = input('Enter IP/Domain/Hash (MD5/SHA1/SHA256): ').strip()
 
-    if re.search(self._md5_pattern, self._value) or re.search(self._sha1_pattern, self._value) or re.search(self._sha256_pattern, self._value):
-      print("Hash detected")
-      VirusTotal.VirusTotal(self._value).run()
-      MalwareBazaar.MalwareBazaar(self._value).run()
-      return
-
-    if not self._ip_pat.match(self._value):  
-      URLScanIO.URLScanIO(self._value).run()
-      self._value = re.sub("(http|https)://", "", self._value)
-      print("Domain detected, attemting to resolve...")
-      DNSLookup.DNSLookup(self._value).run()
-      try:
-        self._value = socket.gethostbyname(self._value)
-      except:
-        print(f"IP for '{self._value}' was not found")
-        return
-              
-    ReverseDNSLookup.ReverseDNSLookup(self._value).run()
-    ThreatFox.ThreatFox(self._value).run()
-    InternetDB.InternetDB(self._value).run()
-    WhoIs.WhoIs(self._value).run()
-    GreyNoise.GreyNoise(self._value).run()
-    ShodanLookup.ShodanLookup(self._value).run()
-    IPAPI.IPAPI(self._value).run()
-
-    # These take some time to complete.
-    inQuest.inQuest(self._value).run()
+    self._performCheck(self._value)

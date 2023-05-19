@@ -43,6 +43,8 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
     - Office SafeLink URLs.
     - Base64 Strings.
     - Cisco7 Passwords.
+  - Email:
+    - Analyze Email Information (Perform Reputation Checks)
   - Unshorten URL's that have been shortened by external services. (Limited to 10 requests per hour).
   - [Unfurl](https://github.com/obsidianforensics/unfurl) URLs via the CLI version of Unfurl.
   
@@ -60,15 +62,19 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
    |   ├── Base 64 Decoder
    |   ├── Cisco Password 7 Decoder
    |   └── Unfurl URL
-   ├── DNS Tools
-   |   ├── Reverse DNS Lookup
-   |   ├── DNS Lookup
-   |   └── WhoIs Lookup
+   ├── Email
+   |   └── Analyze Email
    ├── API (Requires API keys)
    |   ├── URLScan.io lookup
    |   ├── VirusTotal lookup
    |   ├── GreyNoise lookup
    |   └── Shodan lookup
+   ├── Lookup Tools
+   |   ├── Bitcoin Address
+   |   ├── Bitcoin Transaction Tracer
+   |   ├── Reverse DNS Lookup
+   |   ├── DNS Lookup
+   |   └── WhoIs Lookup
    ├── Extra's
    |   ├── InternetDB (Free Shodan)
    |   ├── IP-API (IP Geo Location, rate limited without a key)

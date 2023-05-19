@@ -6,15 +6,18 @@ import importlib.util
 import os
 import inspect
 
+VERSION = "1.1.5"
+
 # This may be possible to simplify
 mainMenu_dict = {
   0: lambda: exit(0),
   1: lambda: URLSanitize().run(),
   2: lambda: ReputationCheck().run(),
   3: lambda: decoderMenu(),
-  4: lambda: dnsMenu(),
+  4: lambda: emailMenu(),
   5: lambda: apiMenu(),
-  6: lambda: extraMenu()
+  6: lambda: lookupsMenu(),
+  7: lambda: extraMenu()
 }
 
 decoders_dict = {
@@ -25,6 +28,13 @@ decoders_dict = {
 }
 
 dns_dict = {
+  0: {
+    "name": "Exit to Main Menu",
+    "run": lambda: mainMenu()
+  }
+}
+
+lookups_dict = {
   0: {
     "name": "Exit to Main Menu",
     "run": lambda: mainMenu()
@@ -45,17 +55,25 @@ extra_dict = {
   }
 }
 
+email_dict = {
+  0: {
+    "name": "Exit to Main Menu",
+    "run": lambda: mainMenu()
+  }
+}
+
 def mainMenu():
-  print("\n ------------------------------------- ")
-  print("\n           S  O  O  T  Y  V 2          ")
-  print("\n ------------------------------------- ")
+  print("\n ------------------------------------ ")
+  print("           S O C P U P P E T          ")
+  print(" ------------------------------------ ")
   print(" What would you like to do? ")
   print("\n OPTION 1: Sanitize URL")
   print(" OPTION 2: Reputation Check")
   print(" OPTION 3: Decoders (PP, URL, SafeLinks) ")
-  print(" OPTION 4: DNS Tools ")
+  print(" OPTION 4: Email Tools ")
   print(" OPTION 5: API Tools (require API keys)")
-  print(" OPTION 6: Extra (Free online lookups and tools)")
+  print(" OPTION 6: Lookup Tools")
+  print(" OPTION 7: Extra (Free online lookups and tools)")
   print("\n OPTION 0: Exit Tool")
   val = int(input(">> "))
   if val not in mainMenu_dict:
@@ -81,27 +99,27 @@ def decoderMenu():
   else:
     decoders_dict[val]['run']()
 
-def dnsMenu():
-  print("\n --------------------------------- ")
-  print("         D N S    T O O L S        ")
-  print(" --------------------------------- ")
+def emailMenu():
+  print("\n ------------------------------------- ")
+  print("         E M A I L    T O O L S        ")
+  print(" ------------------------------------- ")
   print(" What would you like to do? \n")
-  for item in dns_dict.keys():
+  for item in email_dict.keys():
     if item == 0:
       continue
-    print(f" OPTION {item}: {dns_dict[item]['name']}")
+    print(f" OPTION {item}: {email_dict[item]['name']}")
   print("\n OPTION 0: Exit to Main Menu")
   val = int(input(">> "))
-  if val not in dns_dict:
+  if val not in email_dict:
     print("Invalid value specified")
-    dnsMenu()
+    emailMenu()
   else:
-    dns_dict[val]['run']()
+    email_dict[val]['run']()
 
 def apiMenu():
   print("\n ------------------------------------ ")
-  print("\n           A P I  T O O L S          ")
-  print("\n ------------------------------------ ")
+  print("           A P I  T O O L S           ")
+  print(" ------------------------------------ ")
   print(" What would you like to do? ")
   for item in api_dict.keys():
     if item == 0:
@@ -114,6 +132,23 @@ def apiMenu():
     apiMenu()
   else:
     api_dict[val]['run']()
+
+def lookupsMenu():
+  print("\n ------------------------------------ ")
+  print("         L O O K U P  T O O L S        ")
+  print(" ------------------------------------- ")
+  print(" What would you like to do? \n")
+  for item in lookups_dict.keys():
+    if item == 0:
+      continue
+    print(f" OPTION {item}: {lookups_dict[item]['name']}")
+  print("\n OPTION 0: Exit to Main Menu")
+  val = int(input(">> "))
+  if val not in lookups_dict:
+    print("Invalid value specified")
+    lookupsMenu()
+  else:
+    lookups_dict[val]['run']()
 
 def extraMenu():
   print("\n ------------------------------ ")
@@ -132,13 +167,16 @@ def extraMenu():
   else:
     extra_dict[val]['run']()
 
+
+# TODO: Recommend refactoring this to something more simplified. Lots of repeating values.
 def importModules():
   print("Importing Modules")
   directory_path = os.path.dirname(os.path.abspath(__file__))
   directories = [os.path.join(directory_path, 'Plugins', 'Decoders'),
-                 os.path.join(directory_path, 'Plugins', 'DNS'),
+                 os.path.join(directory_path, 'Plugins', 'Email'),
                  os.path.join(directory_path, 'Plugins', 'API'),
-                 os.path.join(directory_path, 'Plugins', 'Extra')]
+                 os.path.join(directory_path, 'Plugins', 'Extra'),
+                 os.path.join(directory_path, 'Plugins', 'Lookups')]
   
   for dir in directories:
     files = os.listdir(dir)
@@ -167,12 +205,14 @@ def importModules():
             }
             if dir.endswith("Decoders"):
               decoders_dict[idx+1] = item
-            elif dir.endswith("DNS"):
-              dns_dict[idx+1] = item
+            elif dir.endswith("Email"):
+              email_dict[idx+1] = item
             elif dir.endswith("API"):
               api_dict[idx+1] = item
             elif dir.endswith("Extra"):
               extra_dict[idx+1] = item
+            elif dir.endswith("Lookups"):
+              lookups_dict[idx+1] = item
 
 if __name__ == "__main__":
   importModules()

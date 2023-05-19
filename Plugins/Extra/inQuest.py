@@ -32,7 +32,8 @@ class inQuest(Plugin.Plugin):
     data_arr = res.json()['data']
 
     if(len(data_arr) == 0):
-      print("  Lookup did not return any results.")
+      print("  Lookup did not return any results.\n")
+      return
 
     for idx, ioc in enumerate(data_arr):
       if(idx > self._stop):
