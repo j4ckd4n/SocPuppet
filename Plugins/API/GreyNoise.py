@@ -22,7 +22,8 @@ class GreyNoise(Plugin.Plugin):
       self._ip = input('Enter IP:').strip()
 
     headers = {
-      "accept": "applicatio"
+      "accept": "application/json",
+      "key": self._api_key
     }
     
     res = requests.get(f'{self._url}{self._ip}', headers=headers)
@@ -31,7 +32,7 @@ class GreyNoise(Plugin.Plugin):
       if res.status_code == 404:
         print(f"\nIP: {self._ip}\nMessage: {data['message']}\n")
       elif res.status_code == 429:
-        print(f"\nLookup failed: Limit Exceeded\nPlan: {data['plan']}\nRate Limit: {data['rate-limit']}\nMessage: {data['message']}\n")
+        print(f"\nLookup failed: Limit Exceeded\nPlan: {data['plan']}\nMessage: {data['message']}\n")
       else:
         print(f"\nLookup failed: {res.status_code}/{data['message']}\n")
       return
