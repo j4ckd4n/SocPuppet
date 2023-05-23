@@ -2,7 +2,7 @@ from Plugins import Plugin, ReputationCheck
 from Plugins.Decoders import ProofPointDecoder
 from Plugins import ReputationCheck
 
-import tkinter.filedialog, os, re
+import tkinter.filedialog, os, re, extract_msg
 
 try:
   import win32com.client
@@ -93,49 +93,36 @@ class AnalyzeEmail(Plugin.Plugin):
     print("\n ------------------------------- ")
     print("    E M A I L  A N A L Y S I S    ")
     print(" -------------------------------- ")
+    file = tkinter.filedialog.askopenfilename(initialdir="/", title="Select .msg file")
     try:
-      file = tkinter.filedialog.askopenfilename(initialdir="/", title="Select file")
-      with open(file, encoding='Latin-1') as f:
-        msg = f.read()
-
-      file2 = file.replace(' ', '')
-        
-      os.rename(file, file2)
-      outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
-      msg = outlook.OpenSharedItem(file)
-    except Exception as e:
-      print(f'Failure opening file: {e}')
+      msg = extract_msg.openMsg(file)
+    except extract_msg.exceptions.StandardViolationError as e:
+      print("Err: Incorrect or corrupted file selected.")
+      return
 
     print("\nExtracting headers...")
-    try:
-      print("  FROM:      ", str(msg.SenderName), ", ", str(msg.SenderEmailAddress))
-      print("  TO:        ", str(msg.To))
-      print("  SUBJECT:   ", str(msg.Subject))
-      print("  NameBehalf:", str(msg.SentOnBehalfOfName))
-      print("  CC:        ", str(msg.CC))
-      print("  BCC:       ", str(msg.BCC))
-      print("  Sent On:   ", str(msg.SentOn))
-      print("  Created:   ", str(msg.CreationTime))
-      msg_body = str(msg.Body)
-    except Exception as e:
-      print(f'  Header Error: {e}')
-      f.close()
-    
-    links = self._extractLinks(msg_body)
+    print("  FROM:      ", str(msg.sender))
+    print("  TO:        ", str(msg.to))
+    print("  SUBJECT:   ", str(msg.subject))
+    print("  CC:        ", str(msg.cc))
+    print("  BCC:       ", str(msg.bcc))
+    print("  Sent On:   ", str(msg.date))
+
+    links = self._extractLinks(msg.body)
     if links is not None:
       for link in links:
         print(f"- {link}")
     else:
       print("No links found")
     
-    emails = self._extractEmails(msg_body)
+    emails = self._extractEmails(msg.body)
     if emails is not None:
       for email in emails:
         print(f"- {email}")
     else:
       print("No emails found")
 
-    ips = self._extractIP(msg_body)
+    ips = self._extractIP(msg.body)
     if ips is not None:
       for ip in ips:
         print(f"- {ip}")
@@ -144,24 +131,26 @@ class AnalyzeEmail(Plugin.Plugin):
 
     user_in = input("Would you like to perform analysis on any gathered URLs and/or Email domains (This may take some time)?\n(y/n): ")
     if user_in.lower() == "y":
-      print("\nChecking domains...")
-      domains = []
-      for email in emails:
-        domain = email.split('@')[1]
-        if domain not in domains:
-          print(f"#### Checking domain: {domain} ####")
-          domains.append(domain)
-          self._reputationCheck._performCheck(domain, skip_url_scan=True)
-      print("-" * 10)
+      if emails:
+        print("\nChecking domains...")
+        domains = []
+        for email in emails:
+          domain = email.split('@')[1]
+          if domain not in domains:
+            print(f"#### Checking domain: {domain} ####")
+            domains.append(domain)
+            self._reputationCheck._performCheck(domain, skip_url_scan=True)
+        print("-" * 10)
       
-      print('\nChecking IPs...')
-      checked_ips = []
-      for ip in ips:
-        if ip not in checked_ips:
-          if not self._isPrivate(ip):
-            print(f"\n#### Checking IP: {ip} ####")
+      if ips:
+        print('\nChecking IPs...')
+        checked_ips = []
+        for ip in ips:
+          if ip not in checked_ips:
+            if not self._isPrivate(ip):
+              print(f"\n#### Checking IP: {ip} ####")
+              checked_ips.append(ip)
+              self._reputationCheck._performCheck(ip)
+            else:
+              print(f"- {ip} is a private address, skipping...")
             checked_ips.append(ip)
-            self._reputationCheck._performCheck(ip)
-          else:
-            print(f"- {ip} is a private address, skipping...")
-          checked_ips.append(ip)
