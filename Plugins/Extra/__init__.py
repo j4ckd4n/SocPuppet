@@ -1,4 +1,4 @@
-from . import inQuest, InternetDB, ThreatFox, MalwareBazaar
+from . import inQuest, InternetDB, ThreatFox, MalwareBazaar, IPScore
 
 extra_dict = {
   0: {
@@ -20,7 +20,11 @@ extra_dict = {
   4: {
     "name": "Malware Bazaar Search",
     "run": lambda: MalwareBazaar.MalwareBazaar().run()
-  }
+  },
+  5: {
+    "name": "IP Score Geo Lookup",
+    "run": lambda: IPScore.IPScore().run()
+  },
 }
 
 def extraMenu():

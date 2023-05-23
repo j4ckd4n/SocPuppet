@@ -1,7 +1,7 @@
 from Plugins import Plugin
 
 from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs
-from Plugins.Extra import ThreatFox, InternetDB, IPAPI, inQuest, MalwareBazaar
+from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
 import re, socket
@@ -40,7 +40,7 @@ class ReputationCheck(Plugin.Plugin):
     WhoIs.WhoIs(value).run()
     GreyNoise.GreyNoise(value).run()
     ShodanLookup.ShodanLookup(value).run()
-    IPAPI.IPAPI(value).run()
+    IPScore.IPScore(value).run()
 
     # These take some time to complete.
     inQuest.inQuest(value).run()
