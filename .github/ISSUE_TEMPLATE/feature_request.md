@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea or new feature to be added to Sooty
+about: Suggest an idea or new feature to be added to SocPuppet
 title: ''
 labels: ''
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **What is the feature that you are requesting?**
-Give a brief description of what new feature you would like to see added to Sooty.
+Give a brief description of what new feature you would like to see added to SocPuppet.
 
 **Additional information**
 If further / more specific details are required, feel free to list them here.
