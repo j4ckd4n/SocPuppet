@@ -4,11 +4,6 @@ from Plugins import ReputationCheck
 
 import tkinter.filedialog, os, re, extract_msg
 
-try:
-  import win32com.client
-except:
-  print("Can't install Win32com package")
-
 class AnalyzeEmail(Plugin.Plugin):
   def __init__(self, path: str = None, name: str = 'AnalyzeEmail'):
     super().__init__(name)

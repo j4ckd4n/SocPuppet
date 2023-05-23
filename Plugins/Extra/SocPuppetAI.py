@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-import gpt4all, os
+import gpt4all, os, sys
 
 class SocPuppetAI(Plugin.Plugin):
   def __init__(self, question: str = None, name: str = "SocPuppetAI"):
@@ -37,7 +37,7 @@ class SocPuppetAI(Plugin.Plugin):
         continue
       elif self._question.startswith("exit_gpt"):
         self._context_memory.clear()
-        exit(1)
+        return
       elif self._question.startswith("show_context"):
         print(self._context_memory)
         self._question = None
