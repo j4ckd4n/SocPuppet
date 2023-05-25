@@ -7,7 +7,7 @@ email_dict = {
   },
   1: {
     "name": "Analyze Email File",
-    "run": lambda: AnalyzeEmail.AnalyzeEmail.run()
+    "run": lambda: AnalyzeEmail.AnalyzeEmail().run()
   }
 }
 
