@@ -11,7 +11,6 @@ class URLSanitize(Plugin.Plugin):
     x = re.sub(r"\.", "[.]", url)
     x = re.sub("http://", "hxxp://", x)
     x = re.sub("https://", "hxxps://", x)
-
     return x
 
   def run(self):

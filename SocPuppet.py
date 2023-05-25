@@ -48,6 +48,7 @@ def mainMenu():
     mainMenu_dict[val]()
 
 if __name__ == "__main__":
+  # TODO: need a check for this to see if the config.json file exists
   Config.loadConfig("config.json")
   
   print("\n ------------------------------------ ")
