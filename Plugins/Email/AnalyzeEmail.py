@@ -2,7 +2,7 @@ from Plugins import Plugin, ReputationCheck
 from Plugins.Decoders import ProofPointDecoder
 from Plugins import ReputationCheck
 
-import tkinter.filedialog, os, re, extract_msg
+import tkinter.filedialog, os, re, extract_msg, random, string, hashlib
 
 class AnalyzeEmail(Plugin.Plugin):
   def __init__(self, path: str = None, name: str = 'AnalyzeEmail'):
@@ -10,6 +10,7 @@ class AnalyzeEmail(Plugin.Plugin):
     self._proofPointDecoder: ProofPointDecoder.ProofPointDecoder = ProofPointDecoder.ProofPointDecoder()
     self._reputationCheck: ReputationCheck.ReputationCheck = ReputationCheck.ReputationCheck()
     self._path = path
+    self._buf_size = 65536 # reading the file in chunks to ensure we don't overload during hash generation.
 
   def _extractLinks(self, data) -> list:
     print("\nExtracting Links...")
@@ -84,6 +85,11 @@ class AnalyzeEmail(Plugin.Plugin):
     res = priv_lo.match(ip) or priv_24.match(ip) or priv_20.match(ip) or priv_16.match(ip)
     return True if res else False
 
+  def _random_temp_path(self, length = 16) -> str:
+    random_name = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(length))
+    temp_path = f"temp_{random_name}"
+    return os.path.join(os.getenv("TEMP"), temp_path)
+
   def run(self):
     print("\n ------------------------------- ")
     print("    E M A I L  A N A L Y S I S    ")
@@ -124,7 +130,24 @@ class AnalyzeEmail(Plugin.Plugin):
     else:
       print("No IPs found")
 
-    user_in = input("Would you like to perform analysis on any gathered URLs and/or Email domains (This may take some time)?\n(y/n): ")
+    print() # ❤ we just need some space
+
+    attachment_paths = []
+    if len(msg.attachments) != 0:
+      user_in = input("Would you like to extract the attachments from the email? (Be careful with this cause attachments may contain malicious code)?\n(y/n): ")
+      if user_in.lower() == "y":
+        temp_path = self._random_temp_path()
+        os.mkdir(temp_path)
+        for attachment in msg.attachments:
+          attachment_file_path = attachment.save()
+          attachment_name = os.path.basename(attachment_file_path)
+          new_file_path = os.path.join(temp_path, attachment_name)
+          os.rename(attachment_file_path, new_file_path)
+          print(f"- Attachment {attachment_name} saved to: {temp_path}")
+          attachment_paths.append(new_file_path)
+      print() # ❤ we just need some space
+
+    user_in = input("Would you like to perform analysis on any gathered URLs, Email domains, and attachments (This may take some time)?\n(y/n): ")
     if user_in.lower() == "y":
       if emails:
         print("\nChecking domains...")
@@ -149,3 +172,15 @@ class AnalyzeEmail(Plugin.Plugin):
             else:
               print(f"- {ip} is a private address, skipping...")
             checked_ips.append(ip)
+      
+      if attachment_paths:
+        print("="*64)
+        print('\nChecking attachments...')
+        for attachment in attachment_paths:
+          print(f"\nCalculating SHA1 value for {attachment}:")
+          sha1 = hashlib.sha1()
+          with open(attachment, 'rb') as f:
+            while data := f.read(self._buf_size):
+              sha1.update(data)
+          print(f"### Checking SHA1 Hash: {sha1.hexdigest()} for {os.path.basename(attachment)} ###")
+          self._reputationCheck._performCheck(sha1.hexdigest(), True)
