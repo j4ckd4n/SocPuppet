@@ -1,14 +1,17 @@
 from Plugins import Plugin, ReputationCheck
 from Plugins.Decoders import ProofPointDecoder
 from Plugins import ReputationCheck
+from Plugins.Extra import YaraScanner
 
 import tkinter.filedialog, os, re, extract_msg, random, string, hashlib
 
 class AnalyzeEmail(Plugin.Plugin):
   def __init__(self, path: str = None, name: str = 'AnalyzeEmail'):
     super().__init__(name)
+    # TODO: fix...this is ugly 
     self._proofPointDecoder: ProofPointDecoder.ProofPointDecoder = ProofPointDecoder.ProofPointDecoder()
     self._reputationCheck: ReputationCheck.ReputationCheck = ReputationCheck.ReputationCheck()
+    self._yaraScanner: YaraScanner.YaraScanner = YaraScanner.YaraScanner()
     self._path = path
     self._buf_size = 65536 # reading the file in chunks to ensure we don't overload during hash generation.
 
@@ -149,6 +152,8 @@ class AnalyzeEmail(Plugin.Plugin):
 
     user_in = input("Would you like to perform analysis on any gathered URLs, Email domains, and attachments (This may take some time)?\n(y/n): ")
     if user_in.lower() == "y":
+      self._yaraScanner.scanFile(file)
+
       if emails:
         print("\nChecking domains...")
         domains = []
@@ -174,7 +179,7 @@ class AnalyzeEmail(Plugin.Plugin):
             checked_ips.append(ip)
       
       if attachment_paths:
-        print("="*64)
+        print("-"*64)
         print('\nChecking attachments...')
         for attachment in attachment_paths:
           print(f"\nCalculating SHA1 value for {attachment}:")
@@ -184,3 +189,8 @@ class AnalyzeEmail(Plugin.Plugin):
               sha1.update(data)
           print(f"### Checking SHA1 Hash: {sha1.hexdigest()} for {os.path.basename(attachment)} ###")
           self._reputationCheck._performCheck(sha1.hexdigest(), True)
+          print("-"*64)
+      user_in = input("Perform Yara scans on attachments? (Warning this may take some time to complete)\n(y/n):")
+      if user_in.lower() == "y":
+        for attachment in attachment_paths:
+          self._yaraScanner.scanFile(attachment)
