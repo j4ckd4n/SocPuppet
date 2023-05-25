@@ -40,6 +40,9 @@ class YaraScanner(Plugin.Plugin):
     rule_links = []
     for source in rule_sources:
       for path in source['paths']:
+        new_rules = self._getGithubRules(source['owner'], source['repo'], path)
+        if new_rules == None:
+          continue
         rule_links = rule_links + self._getGithubRules(source['owner'], source['repo'], path)
 
 
