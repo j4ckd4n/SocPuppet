@@ -150,21 +150,11 @@ This command will give you the raw context array of what is being fed into the A
 
 ## Changelog
 
-#### Version 1.1 - The Reputation Update - Not Implemented
-  - Improved Rep Checker
-  - Added DNS Tools and WhoIs Functionality
-  - Added Hash and VirusTotal Checkers
-  - Added Abuse IPDB, Tor Exit Node, BadIP's to Reputation Checker
- 
-#### Version 1.0
-  - Initial Release
-  - URL and Proofpoint Decoder
-  - Initial implementation of Reputation Checker
-  - Sanitize links to be safe for email
+Check the `CHANGELOG.md` file.
 
 ## Roadmap
-  This is an outline of what features *will* be coming in future versions.
-  
+This is an outline of what features *may* be coming in future versions. You can see the current SocPuppet project items on the [Projects](https://github.com/users/j4ckd4n/projects/2) site.
+
 #### Version 1.2 - The Phishing Update
   - Scan email attachments for malicious content, macros, files, scan hashes, etc.
   - Ability to analyze an email, retrieve emails, urls and extract info from headers.
@@ -177,7 +167,7 @@ This command will give you the raw context array of what is being fed into the A
   - Perform DKIM Verification
 
 #### Version 1.4 - The PCAP Analysis Update
-- Add ability to analyze .pcap files and provide concise, enriched information.
+  - Add ability to analyze .pcap files and provide concise, enriched information.
 
 #### Version 1.x - The Case Update
   - Add a 'New Case' Feature, allowing output of the tool to be output to a txt file.

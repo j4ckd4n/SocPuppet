@@ -13,8 +13,9 @@ import importlib.util
 import os
 import inspect
 import sys
+import json
 
-VERSION = "1.1.6"
+VERSION = "unknown"
 
 # This may be possible to simplify
 mainMenu_dict = {
@@ -46,10 +47,13 @@ def mainMenu():
     mainMenu_dict[val]()
 
 if __name__ == "__main__":
+  with open("config.json", 'r') as f:
+    j_data = json.load(f)
+  
   print("\n ------------------------------------ ")
   print("           S O C P U P P E T          ")
   print(" ------------------------------------ ")
-  print(f"            Version: {VERSION}       ")
+  print(f"            Version: {j_data['version']}       ")
 
   try:
     while True:
