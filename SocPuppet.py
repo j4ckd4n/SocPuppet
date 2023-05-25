@@ -8,6 +8,7 @@ import Plugins.Decoders as Decoders
 import Plugins.API as API
 import Plugins.Lookups as Lookups
 
+import Plugins.Config as Config
 
 import importlib.util
 import os
@@ -47,13 +48,12 @@ def mainMenu():
     mainMenu_dict[val]()
 
 if __name__ == "__main__":
-  with open("config.json", 'r') as f:
-    j_data = json.load(f)
+  Config.loadConfig("config.json")
   
   print("\n ------------------------------------ ")
   print("           S O C P U P P E T          ")
   print(" ------------------------------------ ")
-  print(f"            Version: {j_data['version']}       ")
+  print(f"            Version: {Config.config['version']}       ")
 
   try:
     while True:
