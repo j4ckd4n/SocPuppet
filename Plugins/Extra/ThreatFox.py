@@ -9,26 +9,40 @@ class ThreatFox(Plugin.Plugin):
     self._query = query
     self._url = "https://threatfox-api.abuse.ch/api/v1/"
 
+  def _performLookup(self, query) -> dict:
+    data = {
+      "query": "search_ioc",
+      "search_term": query
+    }
+
+    res = requests.post(self._url, data=json.dumps(data)).json()
+    if "no_result" in res['query_status']:
+      print(res['data'])
+      return {
+        query: {
+          "err": res['data']
+        }
+      }
+    
+    content = res['data'][0]
+
+    return {
+      query: content
+    }
+
+
   def run(self):
     print("\n ------------------------------- ")
     print("        T H R E A T F O X        ")
     print(" ------------------------------- ")
     if self._query == None:
       self._query = input("Enter an IP/URL: ").strip()
-
-    data = {
-      "query": "search_ioc",
-      "search_term": self._query
-    }
-
-    res = requests.post(self._url, data=json.dumps(data)).json()
-
-    if "no_result" in res['query_status']:
-      print(res['data'])
-      return
     
-    content = res['data'][0]
+    content = self._performLookup(self._query)[self._query]
 
+    if "err" in content.keys():
+      print(f"Lookup error: {content['err']}")
+    
     print(f"""
 IoC: {content['ioc']}
 Confidence: {content['confidence_level']}

@@ -8,6 +8,36 @@ class IPScore(Plugin.Plugin):
     self._ip = ip
     self._url = "https://ip-score.com/json"
 
+  # TODO: Simplify
+  def _performLookup(self, value) -> dict:
+    js_dict = {
+      "ip": value
+    }
+
+    res = requests.post(self._url, data=js_dict)
+
+    if res.status_code != 200:
+      return {
+        value: {
+          "err": f"Lookup failed: {res.content}"
+        }
+      }
+    
+    data = res.json()
+    if data['status'] is not True:
+      return {
+        value: {
+          "err": f"Lookup failed: {data}"
+        }
+      }
+
+    geoip = data['geoip2']
+    return {
+      value: {
+        "data": data,
+        "geoip": geoip
+      }
+    }
 
   def run(self):
     print("\n ---------------------------------------- ")
@@ -16,23 +46,9 @@ class IPScore(Plugin.Plugin):
     if self._ip == None:
       self._ip = input('Enter IP to lookup location: ').strip()
 
-    js_dict = {
-      "ip": self._ip
-    }
-
-    res = requests.post(self._url, data=js_dict)
-
-    if res.status_code != 200:
-      print(f"Lookup failed: {res.content}")
-      return
-    
-    data = res.json()
-
-    if data['status'] is not True:
-      print(f"Lookup failed: {data}")
-      return 
-    
-    geoip = data['geoip2']
+    lookup = self._performLookup(self._ip)
+    data = lookup[self._ip]['data']
+    geoip = lookup[self._ip]['geoip']
 
     print(f"""
 IP: {data['ip']}

@@ -4,7 +4,7 @@ from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
-import re, socket
+import re, socket, yaml, json
 
 class ReputationCheck(Plugin.Plugin):
   def __init__(self, value: str = None, name: str = 'ReputationCheck'):
@@ -16,10 +16,13 @@ class ReputationCheck(Plugin.Plugin):
     self._sha256_pattern = r"\b([a-fA-F\d]{64})\b"
 
   def _performCheck(self, value, skip_url_scan = False):
+    lookups = {}
     if re.search(self._md5_pattern, value) or re.search(self._sha1_pattern, value) or re.search(self._sha256_pattern, value):
       print("Hash detected")
-      VirusTotal.VirusTotal(value).run()
-      MalwareBazaar.MalwareBazaar(value).run()
+      virus_total_lookup = VirusTotal.VirusTotal()._performLookup(value)
+      lookups['virus_total_lookup'] = virus_total_lookup
+      malware_bazaar_lookup = MalwareBazaar.MalwareBazaar()._performLookup(value)
+      lookups['malware_bazaar_lookup'] = malware_bazaar_lookup
       return
 
     if not self._ip_pat.match(value):
@@ -27,23 +30,34 @@ class ReputationCheck(Plugin.Plugin):
         URLScanIO.URLScanIO(value).run()
       value = re.sub("(http|https)://", "", value)
       print("Domain detected, attemting to resolve...")
-      DNSLookup.DNSLookup(value).run()
+      dns_lookup = DNSLookup.DNSLookup()._performLookup(value)
+      lookups['dns_lookup'] = dns_lookup
       try:
         value = socket.gethostbyname(value)
       except:
         print(f"IP for '{value}' was not found")
         return
               
-    ReverseDNSLookup.ReverseDNSLookup(value).run()
-    ThreatFox.ThreatFox(value).run()
-    InternetDB.InternetDB(value).run()
-    WhoIs.WhoIs(value).run()
-    GreyNoise.GreyNoise(value).run()
-    ShodanLookup.ShodanLookup(value).run()
-    IPScore.IPScore(value).run()
+    reverse_dns = ReverseDNSLookup.ReverseDNSLookup()._performLookup(value)
+    lookups['reverse_dns_lookup'] = reverse_dns
+    threatfox = ThreatFox.ThreatFox()._performLookup(value)
+    lookups['threatfox_lookup'] = threatfox
+    internetdb_lookup = InternetDB.InternetDB()._performLookup(value)
+    lookups['internetdb_lookup'] = internetdb_lookup
+    whois_lookup = WhoIs.WhoIs()._performLookup(value)
+    lookups['whois_lookup'] = whois_lookup
+    grey_noise = GreyNoise.GreyNoise()._performLookup(value)
+    lookups['greynoise_lookup'] = grey_noise
+    shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(value)
+    lookups['shodan_lookup'] = shodan_lookup
+    ip_score = IPScore.IPScore()._performLookup(value)
+    lookups['ip_score_geo_ip'] = ip_score
 
     # These take some time to complete.
-    inQuest.inQuest(value).run()
+    inquest_lookup = inQuest.inQuest()._performLookup(value)
+    lookups['inquest_lookup'] = inquest_lookup
+
+    print(yaml.dump(lookups))
 
   def run(self):
     print("\n -------------------------------------------- ")

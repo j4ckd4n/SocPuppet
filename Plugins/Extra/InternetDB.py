@@ -9,6 +9,26 @@ class InternetDB(Plugin.Plugin):
 
     self._url = "https://internetdb.shodan.io/"
 
+  def _performLookup(self, value) -> dict:
+    res = requests.get("{}{}".format(self._url, self._value))
+    if res.status_code != 200:
+      if res.status_code == 404:
+        return {
+          value: {
+            'err': res.json()['detail']
+          }
+        }
+      return {
+        value:{
+          'err': f"Lookup failed: {res.text}"
+        }
+      }
+    
+    host = res.json()
+    return {
+      value: host
+    }
+
   def run(self):
     print("\n --------------------------------- ")
     print("        I N T E R N E D D B        ")
@@ -17,7 +37,11 @@ class InternetDB(Plugin.Plugin):
     if self._value == None:
       self._value = input('\nEnter IP: ').strip()
 
-    host = requests.get("{}{}".format(self._url, self._value)).json()
+    host = self._performLookup(self._value)[self._value]
+
+    if "err" in host.keys():
+      print(host['err'])
+      return
     
     print()
     if "detail" in host.keys():

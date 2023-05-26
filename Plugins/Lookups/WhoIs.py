@@ -10,19 +10,43 @@ class WhoIs(Plugin.Plugin):
     self._value = value
     self._ip_pat = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
-  def run(self, val: str = None):
+  def _performLookup(self, value) -> dict:
+    try:
+      w = IPWhois(value)
+      w = w.lookup_whois()
+      addr = str(w['nets'][0]['address'])
+      addr = addr.replace('\n', ', ')
+      return {
+        value: {
+          "cidr": str(w['nets'][0]['cidr']),
+          "name": str(w['nets'][0]['name']),
+          "ip_range": str(w['nets'][0]['range']),
+          "description": str(w['nets'][0]['description']),
+          "country": str(w['nets'][0]['country']),
+          "state": str(w['nets'][0]['state']),
+          "city": str(w['nets'][0]['city']),
+          "address": addr,
+          "postal_code": str(w['nets'][0]['postal_code']),
+          "created_date": str(w['nets'][0]['created']),
+          "updated_date": str(w['nets'][0]['updated'])
+        }
+      }
+    except Exception as e:
+      return {
+        value: {
+          'err': "Lookup did not return anything."
+        }
+      }
+
+  def run(self):
     print("\n ----------------------- ")
     print("        W H O I S        ")
     print(" ----------------------- ")
 
     if self._value == None:
-      if val == None:
-        self._value = input('Enter IP / Domain: ').strip()
-      else:
-        self._value = val
+      self._value = input('Enter IP / Domain: ').strip()
     
     self._value = re.sub('(https|http)://', '', self._value)
-
     
     if not self._ip_pat.match(self._value):
       try:
@@ -32,30 +56,27 @@ class WhoIs(Plugin.Plugin):
       except: 
         print("Domain not found")
 
-    try:
-      w = IPWhois(self._value)
-      w = w.lookup_whois()
-      addr = str(w['nets'][0]['address'])
-      addr = addr.replace('\n', ', ')
-      print("\nWHOIS REPORT:")
-      print("CIDR:      " + str(w['nets'][0]['cidr']))
-      print("Name:      " + str(w['nets'][0]['name']))
-      # print("  Handle:    " + str(w['nets'][0]['handle']))
-      print("Range:     " + str(w['nets'][0]['range']))
-      print("Descr:     " + str(w['nets'][0]['description']))
-      print("Country:   " + str(w['nets'][0]['country']))
-      print("State:     " + str(w['nets'][0]['state']))
-      print("City:      " + str(w['nets'][0]['city']))
-      print("Address:   " + addr)
-      print("Post Code: " + str(w['nets'][0]['postal_code']))
-      # print("  Emails:    " + str(w['nets'][0]['emails']))
-      print("Created:   " + str(w['nets'][0]['created']))
-      print("Updated:   " + str(w['nets'][0]['updated']))
+    lookup = self._performLookup(self._value)[self._value]
+    if "err" in lookup:
+      print(f"Lookup Error: {lookup['err']}")
+      return
+    
+    print("\nWHOIS REPORT:")
+    print("CIDR:      " + lookup['cidr'])
+    print("Name:      " + lookup['name'])
+    # print("  Handle:    " + str(w['nets'][0]['handle']))
+    print("Range:     " + lookup['ip_range'])
+    print("Descr:     " + lookup['description'])
+    print("Country:   " + lookup['country'])
+    print("State:     " + lookup['state'])
+    print("City:      " + lookup['city'])
+    print("Address:   " + lookup['address'])
+    print("Post Code: " + lookup['postal_code'])
+    # print("  Emails:    " + str(w['nets'][0]['emails']))
+    print("Created:   " + lookup['created_date'])
+    print("Updated:   " + lookup['updated_date'])
 
-      #self._writeToFile(w)
-
-    except Exception as e:
-      print("\nLookup did not find anything for '%s'" % self._value)
+    #self._writeToFile(w)
   
   def _writeToFile(self, w: dict):
     now = datetime.datetime.now() # current date and time
