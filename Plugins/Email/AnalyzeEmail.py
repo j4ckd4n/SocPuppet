@@ -13,7 +13,7 @@ class AnalyzeEmail(Plugin.Plugin):
     self._reputationCheck: ReputationCheck.ReputationCheck = ReputationCheck.ReputationCheck()
     self._yaraScanner: YaraScanner.YaraScanner = YaraScanner.YaraScanner()
     self._path = path
-    self._buf_size = 65536 # reading the file in chunks to ensure we don't overload during hash generation.
+    self._buf_size = 65536 # reading the file in chunks to ensure we don't overload memory during hash generation.
 
   def _extractLinks(self, data) -> list:
     print("\nExtracting Links...")
@@ -154,6 +154,8 @@ class AnalyzeEmail(Plugin.Plugin):
     if user_in.lower() == "y":
       self._yaraScanner.scanFile(file)
 
+      # need to be rewritten to support for a combined reputation check.
+      # not enough time to write this.
       if emails:
         print("\nChecking domains...")
         domains = []

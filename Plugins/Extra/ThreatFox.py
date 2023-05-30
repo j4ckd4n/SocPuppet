@@ -17,7 +17,6 @@ class ThreatFox(Plugin.Plugin):
 
     res = requests.post(self._url, data=json.dumps(data)).json()
     if "no_result" in res['query_status']:
-      print(res['data'])
       return {
         query: {
           "err": res['data']

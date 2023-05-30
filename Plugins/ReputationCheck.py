@@ -24,7 +24,7 @@ class ReputationCheck(Plugin.Plugin):
       malware_bazaar_lookup = MalwareBazaar.MalwareBazaar()._performLookup(value)
       lookups['malware_bazaar_lookup'] = malware_bazaar_lookup
       return
-
+    
     if not self._ip_pat.match(value):
       if not skip_url_scan:  
         URLScanIO.URLScanIO(value).run()
@@ -37,7 +37,7 @@ class ReputationCheck(Plugin.Plugin):
       except:
         print(f"IP for '{value}' was not found")
         return
-              
+    
     reverse_dns = ReverseDNSLookup.ReverseDNSLookup()._performLookup(value)
     lookups['reverse_dns_lookup'] = reverse_dns
     threatfox = ThreatFox.ThreatFox()._performLookup(value)
@@ -58,6 +58,47 @@ class ReputationCheck(Plugin.Plugin):
     lookups['inquest_lookup'] = inquest_lookup
 
     print(yaml.dump(lookups))
+  
+  def _performListLookup(self, values: list, skip_url_scan = False):
+    lookups = {}
+    for item in values:
+      print(f"Performing lookup on: {item}")
+      if re.search(self._md5_pattern, item) or re.search(self._sha1_pattern, item) or re.search(self._sha256_pattern, value):
+        virus_total_lookup = VirusTotal.VirusTotal()._performLookup(item)
+        lookups['virus_total_lookup'] = virus_total_lookup
+        malware_bazaar_lookup = MalwareBazaar.MalwareBazaar()._performLookup(item)
+        lookups['malware_bazaar_lookup'] = malware_bazaar_lookup
+        continue
+      
+      if not self._ip_pat.match(item):
+        if not skip_url_scan:
+          print("urlscan not implemented yet")
+        item = re.sub("(http|https)://", "", item)
+        dns_lookup = DNSLookup.DNSLookup()._performLookup(item)
+        lookups['dns_lookup'] = dns_lookup
+        try:
+          value = socket.gethostbyname(item)
+        except:
+          continue
+
+      reverse_dns = ReverseDNSLookup.ReverseDNSLookup()._performLookup(value)
+      lookups['reverse_dns_lookup'] = reverse_dns
+      threatfox = ThreatFox.ThreatFox()._performLookup(value)
+      lookups['threatfox_lookup'] = threatfox
+      internetdb_lookup = InternetDB.InternetDB()._performLookup(value)
+      lookups['internetdb_lookup'] = internetdb_lookup
+      whois_lookup = WhoIs.WhoIs()._performLookup(value)
+      lookups['whois_lookup'] = whois_lookup
+      grey_noise = GreyNoise.GreyNoise()._performLookup(value)
+      lookups['greynoise_lookup'] = grey_noise
+      shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(value)
+      lookups['shodan_lookup'] = shodan_lookup
+      ip_score = IPScore.IPScore()._performLookup(value)
+      lookups['ip_score_geo_ip'] = ip_score
+
+      # These take some time to complete.
+      inquest_lookup = inQuest.inQuest()._performLookup(value)
+      lookups['inquest_lookup'] = inquest_lookup
 
   def run(self):
     print("\n -------------------------------------------- ")
