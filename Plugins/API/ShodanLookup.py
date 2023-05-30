@@ -37,7 +37,6 @@ class ShodanLookup(Plugin.Plugin):
         }
       return data_out
     except Exception as e:
-      print(e)
       return {
         value: {
           'err': e

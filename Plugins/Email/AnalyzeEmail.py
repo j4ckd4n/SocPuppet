@@ -154,44 +154,44 @@ class AnalyzeEmail(Plugin.Plugin):
     if user_in.lower() == "y":
       self._yaraScanner.scanFile(file)
 
+      items_to_lookup = {
+        "domains": [],
+        "ips": [],
+        "hashes": []
+      }
+
       # need to be rewritten to support for a combined reputation check.
       # not enough time to write this.
       if emails:
-        print("\nChecking domains...")
-        domains = []
+        print("Gathering domains...")
         for email in emails:
           domain = email.split('@')[1]
-          if domain not in domains:
-            print(f"#### Checking domain: {domain} ####")
-            domains.append(domain)
-            self._reputationCheck._performCheck(domain, skip_url_scan=True)
-        print("-" * 10)
+          if domain not in items_to_lookup['domains']:
+            items_to_lookup['domains'].append(domain)
       
       if ips:
-        print('\nChecking IPs...')
-        checked_ips = []
+        print('Gathering IPs...')
         for ip in ips:
-          if ip not in checked_ips:
+          if ip not in items_to_lookup['ips']:
             if not self._isPrivate(ip):
-              print(f"\n#### Checking IP: {ip} ####")
-              checked_ips.append(ip)
-              self._reputationCheck._performCheck(ip)
-            else:
-              print(f"- {ip} is a private address, skipping...")
-            checked_ips.append(ip)
+              items_to_lookup['ips'].append(ip)
       
       if attachment_paths:
-        print("-"*64)
-        print('\nChecking attachments...')
+        print('Gathering attachments...')
         for attachment in attachment_paths:
-          print(f"\nCalculating SHA1 value for {attachment}:")
+          print(f"\nCalculating SHA1 value for {attachment}: ", end="")
           sha1 = hashlib.sha1()
           with open(attachment, 'rb') as f:
             while data := f.read(self._buf_size):
               sha1.update(data)
-          print(f"### Checking SHA1 Hash: {sha1.hexdigest()} for {os.path.basename(attachment)} ###")
-          self._reputationCheck._performCheck(sha1.hexdigest(), True)
-          print("-"*64)
+          hash = str(sha1.hexdigest())
+          print(hash)
+          if hash not in items_to_lookup['hashes']:
+            items_to_lookup['hashes'].append(hash)
+      
+      self._reputationCheck._performListLookup(items_to_lookup, True)
+      
+      print("Performing reputation check on gathered information")
       user_in = input("Perform Yara scans on attachments? (Warning this may take some time to complete)\n(y/n):")
       if user_in.lower() == "y":
         for attachment in attachment_paths:
