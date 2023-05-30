@@ -23,7 +23,7 @@ class VirusTotal(Plugin.Plugin):
     }
 
   def _performLookup(self, value) -> dict:
-    params = {'apikey': self._api_key, 'resource': self._fileHash}
+    params = {'apikey': self._api_key, 'resource': value}
     response = requests.get(self._vt_url, params=params)
 
     try:

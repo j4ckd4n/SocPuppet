@@ -33,18 +33,20 @@ class inQuest(Plugin.Plugin):
         }
       }
 
-    iocs = {}
+    iocs = {
+      value: []
+    }
     for idx, ioc in enumerate(data_arr):
       if idx > self._stop:
         break
-      iocs[f"ioc_{idx+1}"] = {
+      iocs[value].append({f"ioc_{idx+1}": {
         'data': ioc['data'],
         'data_type': ioc['data_type'],
         'derived': ioc['derived'],
         'derived_type': ioc['derived_type'],
         'source': ioc['source'],
         'source_url': ioc['source_url']
-      }
+      }})
 
     return iocs
 
