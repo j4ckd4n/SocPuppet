@@ -104,7 +104,7 @@ class YaraScanner(Plugin.Plugin):
         rule_list = self._downloadRules(rule_links)
         if not rule_list:
           print("Failed to download rules. Exiting...")
-          exit(1)
+          return
       else:
         print("Using local download cache for compilation")
         files = os.listdir(self._local_temp_file_cache)
