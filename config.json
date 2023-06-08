@@ -1,24 +1,20 @@
 {
   "version": "1.1.8",
-  "yara_sources": {
-    "email": [
-      {
-        "owner": "Yara-Rules",
-        "repo": "rules",
-        "paths": ["email"]
-      }
-    ],
-    "file": [
-      {
-        "owner": "Yara-Rules",
-        "repo": "rules",
-        "paths": ["malware", "webshells", "packers", "exploit_kits", "crypto", "antidebug_antivm", "maldocs", "capabilities"]
-      },
-      {
-        "owner": "j4ckd4n",
-        "repo": "yara",
-        "paths": ["__root__"]
-      }
-    ]
-  }
+  "yara_sources": [
+    {
+      "owner": "Yara-Rules",
+      "repo": "rules",
+      "paths": ["email"]
+    },
+    {
+      "owner": "Yara-Rules",
+      "repo": "rules",
+      "paths": ["malware", "webshells", "packers", "exploit_kits", "crypto", "antidebug_antivm", "maldocs", "capabilities"]
+    },
+    {
+      "owner": "j4ckd4n",
+      "repo": "yara",
+      "paths": ["__root__"]
+    }
+  ]
 }
