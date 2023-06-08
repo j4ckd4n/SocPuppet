@@ -207,47 +207,40 @@ class AnalyzeEmail(Plugin.Plugin):
 
     user_in = input("Would you like to perform analysis on any gathered URLs, Email domains, and attachments (This may take some time)?\n(y/n): ")
     if user_in.lower() == "y":
-      self._yaraScanner.scanFile(file)
-
       items_to_lookup = {
         "domains": [],
         "ips": [],
-        "hashes": []
+        "hashes": [],
+        "files": [file]
       }
 
       # need to be rewritten to support for a combined reputation check.
       # not enough time to write this.
       if emails:
-        print("Gathering domains...")
+        print("[AE]: Gathering domains...")
         for email in emails:
           domain = email.split('@')[1]
           if domain not in items_to_lookup['domains']:
             items_to_lookup['domains'].append(domain)
       
       if ips:
-        print('Gathering IPs...')
+        print('[AE]: Gathering IPs...')
         for ip in ips:
           if ip not in items_to_lookup['ips']:
             if not self._isPrivate(ip):
               items_to_lookup['ips'].append(ip)
       
       if attachment_paths:
-        print('Gathering attachments...')
+        print('[AE]: Gathering attachments...')
         for attachment in attachment_paths:
-          print(f"\nCalculating SHA1 value for {attachment}: ", end="")
+          if attachment not in items_to_lookup['files']:
+            items_to_lookup['files'].append(attachment)
           sha1 = hashlib.sha1()
           with open(attachment, 'rb') as f:
             while data := f.read(self._buf_size):
               sha1.update(data)
           hash = str(sha1.hexdigest())
-          print(hash)
           if hash not in items_to_lookup['hashes']:
             items_to_lookup['hashes'].append(hash)
       
       self._reputationCheck._performListLookup(items_to_lookup, True)
-      
-      print("Performing reputation check on gathered information")
-      user_in = input("Perform Yara scans on attachments? (Warning this may take some time to complete)\n(y/n):")
-      if user_in.lower() == "y":
-        for attachment in attachment_paths:
-          self._yaraScanner.scanFile(attachment)
