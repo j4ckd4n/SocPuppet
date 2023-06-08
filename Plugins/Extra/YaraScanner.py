@@ -80,14 +80,16 @@ class YaraScanner(Plugin.Plugin):
     
     compiled_rules_path_list = []
     dir_list = os.listdir(self._local_yara_cache_path)
-    with alive_bar(bar="smooth", title="Getting YARA rules") as spinner:
+    print("Getting YARA rules")
+    with alive_bar(bar="smooth") as spinner:
       for item in dir_list:
         if item.endswith(".yar"):
           compiled_rules_path_list.append(os.path.join(self._local_yara_cache_path, item))
         spinner()
     return compiled_rules_path_list
 
-  def scanFile(self, filepath: str):
+  def scanFile(self, filepath: str) -> dict:
+    file_name = os.path.split(filepath)[1]
     if not os.path.exists(self._local_yara_cache_path):
       rule_sources = self._getRuleLinks()
 
@@ -115,7 +117,6 @@ class YaraScanner(Plugin.Plugin):
       print("Compiling and saving rules...")
       compiled_rules = self._compileRules(rule_list)
     else:
-      print(f"Getting compiled rules from {self._local_yara_cache_path}...")
       compiled_rules = self._getCompiledRules()
 
     print(f"Performing YARA scan against: {filepath}")
@@ -131,24 +132,25 @@ class YaraScanner(Plugin.Plugin):
     print()
 
     if match_list:
-      print("detections:")
+      output = {file_name: {}}
       for matches in match_list:
         for match in matches:
-          print(f"  rule_{match.rule}:")
-          print(f"    tags:")
+          output[file_name][f'rule_{match.rule}'] = {"tags": [], 'strings': {}}
           for tag in match.tags:
-            print(f"      - {tag}")
+            output[file_name][f'rule_{match.rule}']['tags'].append(f'{tag}')
           for string in match.strings:
-            print("    strings:")
-            print(f"        {string.identifier}:")
+            output[file_name][f'rule_{match.rule}']['strings'][f'{string.identifier}'] = []
             for instance in string.instances:
-              print(f"          - {instance}")
-          print()
-    else:
-      print("No matches found...")
+              output[file_name][f'rule_{match.rule}']['strings'][f'{string.identifier}'].append(f'{instance}')
+      return output
+    return {file_name: "no detections"}
 
   def run(self):
     if self._file_path == None:
       self._file_path = tkinter.filedialog.askopenfilename(initialdir="/", title="Select .msg file")
 
-    self.scanFile(self._file_path)
+    output = self.scanFile(self._file_path)
+    if output:
+      print(yaml.dump(output))
+    else:
+      print("No matches found...")
