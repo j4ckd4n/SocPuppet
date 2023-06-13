@@ -152,7 +152,7 @@ class ReputationCheck(Plugin.Plugin):
     print("        R E P U T A T I O N  C H E C K        ")
     print(" -------------------------------------------- ")
     if self._value == None:
-      self._value = input('Enter IP/Domain/Hash (MD5/SHA1/SHA256): ').strip()
+      self._value = input('Note: You can specify multiple values separated by ","\nEnter IP/Domain/Hash (MD5/SHA1/SHA256): ').strip()
 
     lookup_dict = {
       "ips": [],
@@ -161,11 +161,24 @@ class ReputationCheck(Plugin.Plugin):
       'domains': []
     }
 
-    if re.search(self._md5_pattern, self._value) or re.search(self._sha1_pattern, self._value) or re.search(self._sha256_pattern, self._value):
-      lookup_dict['hashes'].append(self._value)
-    elif not self._ip_pat.match(self._value):
-      lookup_dict['domains'].append(self._value)
+    if "," in self._value:
+      item_array = self._value.split(',')
+      for item in item_array:
+        item = item.strip()
+        if re.search(self._md5_pattern, item) or re.search(self._sha1_pattern, item) or re.search(self._sha256_pattern, item):
+          lookup_dict['hashes'].append(item)
+        elif not self._ip_pat.match(item):
+          lookup_dict['domains'].append(item)
+        else:
+          lookup_dict['ips'].append(item)
     else:
-      lookup_dict['ips'].append(self._value)
+      if re.search(self._md5_pattern, self._value) or re.search(self._sha1_pattern, self._value) or re.search(self._sha256_pattern, self._value):
+        lookup_dict['hashes'].append(self._value)
+      elif not self._ip_pat.match(self._value):
+        lookup_dict['domains'].append(self._value)
+      else:
+        lookup_dict['ips'].append(self._value)
+
+    print(lookup_dict)
 
     self._performListLookup(lookup_dict)
