@@ -20,7 +20,6 @@ jobs:
         rm SocPuppet.spec
         rm .gitignore
         rm CHANGELOG.md
-        rm releases
         rm Dockerfile
     - name: Package the environment
       run: |
