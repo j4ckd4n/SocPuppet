@@ -108,7 +108,7 @@ class AnalyzeEmail(Plugin.Plugin):
       'bcc': msg.get_all('bcc', 'n/a'),
       'date': msg.get_all('date', 'n/a'),
       'attachments': msg.iter_attachments(),
-      'body': msg.get_body(preferencelist=('plain')).get_content()
+      'body': msg.get_body().get_content()
     }
 
   def _parse_msg(self, path) -> dict:
