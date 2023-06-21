@@ -1,0 +1,24 @@
+on:
+  push:
+    tags:
+      - v1.*
+    branches:
+      - main
+
+jobs:
+  setup_environment:
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install zip
+      run: apt install zip
+    - name: Package the environment
+      run: |
+        mkdir releases
+        zip -r -b ./releases/release.zip .
+    - name: Upload the Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: "SocPuppet.zip"
+        path: ./releases/release.zip
