@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Install zip
-      run: apt install zip
     - name: Package the environment
       run: |
         mkdir releases
