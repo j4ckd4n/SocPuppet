@@ -17,7 +17,7 @@ jobs:
     - name: Package the environment
       run: |
         mkdir releases
-        zip -r -b ./releases/release.zip .
+        zip -r ./releases/release.zip .
     - name: Upload the Artifact
       uses: actions/upload-artifact@v3
       with:
