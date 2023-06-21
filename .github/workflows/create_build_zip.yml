@@ -19,6 +19,9 @@ jobs:
         rm build.ps1
         rm SocPuppet.spec
         rm .gitignore
+        rm CHANGELOG.md
+        rm releases
+        rm Dockerfile
     - name: Package the environment
       run: |
         mkdir releases
@@ -26,5 +29,5 @@ jobs:
     - name: Upload the Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: "SocPuppet"
+        name: "release"
         path: ./releases/SocPuppet.zip
