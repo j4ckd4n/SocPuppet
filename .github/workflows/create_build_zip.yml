@@ -12,6 +12,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Remove unnecessary files
+      run: |
+        rm -rf .git
+        rm -rf .github
+        rm build.ps1
+        rm SocPuppet.spec
+        rm .gitignore
     - name: Package the environment
       run: |
         mkdir releases
