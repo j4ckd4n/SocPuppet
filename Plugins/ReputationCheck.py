@@ -66,8 +66,12 @@ class ReputationCheck(Plugin.Plugin):
           if not skip_url_scan:
             print("[RC]: urlscan not implemented yet")
           domain = re.sub("(http|https)://", "", domain)
+          print("[RC]: Performing DNS Lookup")
           dns_lookup = DNSLookup.DNSLookup()._performLookup(domain)
           lookups['dns_lookup'].append(dns_lookup)
+          print("[RC]: Performing WHOIS lookup")
+          whois_lookup = WhoIs.WhoIs()._performLookup(domain)
+          lookups['whois_lookup'] += whois_lookup
           try:
             ip = socket.gethostbyname(domain)
             if ip not in ips:
@@ -98,8 +102,9 @@ class ReputationCheck(Plugin.Plugin):
           self._jitter_sleep((0, 5))
         print("[RC]: performing whois lookups")
         for ip in ips:
-          whois_lookup = WhoIs.WhoIs()._performLookup(ip)
-          lookups['whois_lookup'].append(whois_lookup)
+          if ip not in lookups['whois_lookup']:
+            whois_lookup = WhoIs.WhoIs()._performLookup(ip)
+            lookups['whois_lookup'] += whois_lookup
           progress_bar()
         print("[RC]: performing greynoise lookups")
         for ip in ips:
@@ -134,7 +139,7 @@ class ReputationCheck(Plugin.Plugin):
         lookups['yara_scans'].append(detections)
 
     print("---=== Results ===---")
-    print(yaml.dump(lookups))
+    print(yaml.dump(lookups, sort_keys=False))
 
     user_in = str(input("Save results? (y/n): "))
     if user_in.lower() == 'y':

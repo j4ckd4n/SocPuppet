@@ -2,7 +2,11 @@ from Plugins import Plugin
 
 from ipwhois import IPWhois
 
+import whois
+
 import datetime, os, re, socket
+
+import yaml
 
 class WhoIs(Plugin.Plugin):
   def __init__(self, value: str = None, name: str = 'WhoIs'):
@@ -11,12 +15,35 @@ class WhoIs(Plugin.Plugin):
     self._ip_pat = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
   def _performLookup(self, value) -> dict:
+    output = []
+    if not self._ip_pat.match(value):
+      w = whois.whois(value)
+      output.append({
+        value: {
+          "org": w['org'],
+          "address": w['address'],
+          "city": w['city'],
+          "country": w['country'],
+          "creation_date": w['creation_date'],
+          "expiration_date": w['expiration_date'],
+          "updated_date": w['updated_date'],
+          "dnssec": w['dnssec'],
+          "domain_names": w['domain_name'],
+          "registrar": w['registrar'],
+          "status": w['status'],
+          "name": w['name'],
+          "name_servers": w['name_servers']
+        }
+      })
+
     try:
+      s = socket.gethostbyname(value)
+      value = s
       w = IPWhois(value)
       w = w.lookup_whois()
       addr = str(w['nets'][0]['address'])
       addr = addr.replace('\n', ', ')
-      return {
+      output.append({
         value: {
           "cidr": str(w['nets'][0]['cidr']),
           "name": str(w['nets'][0]['name']),
@@ -30,13 +57,18 @@ class WhoIs(Plugin.Plugin):
           "created_date": str(w['nets'][0]['created']),
           "updated_date": str(w['nets'][0]['updated'])
         }
-      }
+      })
+    except socket.gaierror as e:
+      output.append({
+          'err': "Domain resolution failed"
+      })
     except Exception as e:
-      return {
+      output.append({
         value: {
           'err': "Lookup did not return anything."
         }
-      }
+      })
+    return output
 
   def run(self):
     print("\n ----------------------- ")
@@ -47,34 +79,24 @@ class WhoIs(Plugin.Plugin):
       self._value = input('Enter IP / Domain: ').strip()
     
     self._value = re.sub('(https|http)://', '', self._value)
-    
-    if not self._ip_pat.match(self._value):
-      try:
-        s = socket.gethostbyname(self._value)
-        print('\nResolved Address: %s' % s)
-        self._value = s
-      except: 
-        print("Domain not found")
 
-    lookup = self._performLookup(self._value)[self._value]
-    if "err" in lookup:
-      print(f"Lookup Error: {lookup['err']}")
-      return
-    
-    print("\nWHOIS REPORT:")
-    print("CIDR:      " + lookup['cidr'])
-    print("Name:      " + lookup['name'])
-    # print("  Handle:    " + str(w['nets'][0]['handle']))
-    print("Range:     " + lookup['ip_range'])
-    print("Descr:     " + lookup['description'])
-    print("Country:   " + lookup['country'])
-    print("State:     " + lookup['state'])
-    print("City:      " + lookup['city'])
-    print("Address:   " + lookup['address'])
-    print("Post Code: " + lookup['postal_code'])
-    # print("  Emails:    " + str(w['nets'][0]['emails']))
-    print("Created:   " + lookup['created_date'])
-    print("Updated:   " + lookup['updated_date'])
+    lookup = self._performLookup(self._value)
+    print(yaml.dump(lookup))
+
+    # print("\nWHOIS REPORT:")
+    # print("CIDR:      " + lookup['cidr'])
+    # print("Name:      " + lookup['name'])
+    # # print("  Handle:    " + str(w['nets'][0]['handle']))
+    # print("Range:     " + lookup['ip_range'])
+    # print("Descr:     " + lookup['description'])
+    # print("Country:   " + lookup['country'])
+    # print("State:     " + lookup['state'])
+    # print("City:      " + lookup['city'])
+    # print("Address:   " + lookup['address'])
+    # print("Post Code: " + lookup['postal_code'])
+    # # print("  Emails:    " + str(w['nets'][0]['emails']))
+    # print("Created:   " + lookup['created_date'])
+    # print("Updated:   " + lookup['updated_date'])
 
     #self._writeToFile(w)
   
