@@ -8,6 +8,19 @@ class DNSLookup(Plugin.Plugin):
     super().__init__(name)
     self._dns = dns
 
+  def _performLookup(self, dns) -> dict:
+    dns = re.sub("(http|https)://", "", dns)
+    try:
+      dns_resolution = socket.gethostbyname(dns)
+    except:
+      dns_resolution = "No IP association found."
+
+    return {
+      f"{dns}": {
+        "dns_resolution": dns_resolution
+      }
+    }
+
   def run(self):
     print("\n -------------------------------- ")
     print("        D N S  L O O K U P        ")
@@ -16,13 +29,5 @@ class DNSLookup(Plugin.Plugin):
       self._dns = input('Enter DNS value: ').strip()
 
     self._dns = re.sub("(http|https)://", "", self._dns)
-    try:
-      s = socket.gethostbyname(self._dns)
-      print('\nDomain resolved to: %s' % s)
-    except:
-      print("IP for '%s' wa not found" % s)
-
-
-"""
-File Analysis: - Attempts to fetch the file are unsuccessful due to S1 not having enough details on this executable. - The applications were executed by the users. - Did not observe malicious activity, appears to be benign. Analyst verdict: Appears to be the false positive at this time, the rule has been modified appropriately by SCSA
-"""
+    lookup = self._performLookup(self._dns)
+    print(f"\nLookup returned: {lookup[self._dns]['dns_resolution']}")

@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-import os, requests
+import os, requests, yaml
 
 
 class VirusTotal(Plugin.Plugin):
@@ -21,6 +21,47 @@ class VirusTotal(Plugin.Plugin):
         "run": lambda: self._hashDetails()
       }
     }
+
+  def _performLookup(self, value) -> dict:
+    params = {'apikey': self._api_key, 'resource': value}
+    response = requests.get(self._vt_url, params=params)
+
+    try:
+      result = response.json()
+      if result['response_code'] == 0:
+        return {
+          value: {
+            'err': 'Hash was not found in Malware Database'
+          }
+        }
+      elif result['response_code'] == 1:
+        data = {
+          value: {
+            "scan_date": result['scan_date'],
+            "permalink": result['permalink'],
+            "hashes": {
+              "md5": result['md5'],
+              "sha1": result['sha1'],
+              "sha256": result['sha256']
+            },
+            "av_detections": {}
+          }
+        }
+
+        scans = result['scans']
+        for scan in scans.keys():
+          if scans[scan]['detected'] == True:
+            data[value]['av_detections'][scan] = {
+              "result": scans[scan]['result'],
+            }
+        
+        return data
+    except Exception as e:
+      return {
+          value: {
+            'err': e
+          }
+        }
 
   def _hashRating(self):
     if self._fileHash == None:
@@ -73,16 +114,7 @@ class VirusTotal(Plugin.Plugin):
     print("\n --------------------------------- ")
     print("\n        V I R U S T O T A L        ")
     print("\n --------------------------------- ")
-    if self._fileHash is not None:
-      self._hashRating()
-      return
+    if self._fileHash == None:
+      self._fileHash = input("Enter Hash of File: ").strip()
     
-    print("What would you like to do? \n")
-    for item in self._options.keys():
-      print(f"OPTION {item}: {self._options[item]['name']}")
-    val = int(input(">> "))
-    if val not in self._options:
-      print("Invalid value specified")
-      self.run()
-    else:
-      self._options[val]['run']()
+    print(yaml.dump(self._performLookup(self._fileHash)[self._fileHash]))

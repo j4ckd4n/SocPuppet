@@ -4,5 +4,8 @@ class Plugin:
         self.args = args
         self.kwargs = kwargs
     
+    def _performLookup(self, value) -> dict:
+        raise NotImplementedError()
+
     def run(self):
         raise NotImplementedError()

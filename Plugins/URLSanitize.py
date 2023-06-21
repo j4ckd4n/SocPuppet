@@ -7,6 +7,12 @@ class URLSanitize(Plugin.Plugin):
     super().__init__(name)
     self._url = url
 
+  def _sanitize(self, url) -> str:
+    x = re.sub(r"\.", "[.]", url)
+    x = re.sub("http://", "hxxp://", x)
+    x = re.sub("https://", "hxxps://", x)
+    return x
+
   def run(self):
     print("\n --------------------------------- ")
     print(" U R L   S A N I T I S E   T O O L ")
@@ -14,7 +20,4 @@ class URLSanitize(Plugin.Plugin):
     if self._url == None:
       self._url = input('Enter URL to sanitize: ').strip()
 
-    x = re.sub(r"\.", "[.]", self._url)
-    x = re.sub("http://", "hxxp://", x)
-    x = re.sub("https://", "hxxps://", x)
-    print("\n" + x)
+    print("\n" + self._sanitize(self._url))

@@ -20,11 +20,14 @@ class URLScanIO(Plugin.Plugin):
       self._url = input('\nEnter url:').strip()
     
     try:
-      type_prompt = str(input('\nSet scan visibility to Public? \nType "1" for Public or "2" for Unlisted: '))
+      type_prompt = str(input('\nSet scan visibility to Public? \nType "1" for Public, "2" for Unlisted, or "0" to skip: '))
       if type_prompt == '1':
         scan_type = 'public'
-      else:
+      elif type_prompt == "2":
         scan_type = 'unlisted'
+      else:
+        print("Exiting...")
+        return
     except:
       print('Please make a selection again.. ')
 
