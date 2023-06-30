@@ -7,3 +7,4 @@ yara-python
 pyyaml
 extract_msg
 python-whois
+pygments

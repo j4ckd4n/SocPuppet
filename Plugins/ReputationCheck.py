@@ -9,6 +9,10 @@ import datetime
 
 from alive_progress import alive_bar
 
+from pygments import highlight
+from pygments.lexers.data import YamlLexer
+from pygments.formatters import TerminalFormatter
+
 class ReputationCheck(Plugin.Plugin):
   def __init__(self, value: str = None, name: str = 'ReputationCheck'):
     super().__init__(name)
@@ -27,6 +31,19 @@ class ReputationCheck(Plugin.Plugin):
     temp_path = f"temp_{random_name}"
     return os.path.join(os.getenv("TEMP"), temp_path)
   
+  def flatten_data(self, data, prefix=''):
+    flattened_data = []
+    if isinstance(data, dict):
+      for key, value in data.items():
+        flattened_data.extend(self.flatten_data(value, prefix=f'{prefix}{key}.'))
+    elif isinstance(data, list):
+      for index, item in enumerate(data):
+        flattened_data.extend(self.flatten_data(item, prefix=f'{prefix}{index}.'))
+    else:
+      flattened_data.append((prefix.rstrip('.'), data))
+
+    return flattened_data
+
   def _performListLookup(self, values: dict, skip_url_scan = False):
     lookups = {
       "virus_total_lookup": [],
@@ -139,7 +156,7 @@ class ReputationCheck(Plugin.Plugin):
         lookups['yara_scans'].append(detections)
 
     print("---=== Results ===---")
-    print(yaml.dump(lookups, sort_keys=False))
+    print(highlight(yaml.dump(lookups, sort_keys=False), YamlLexer(), TerminalFormatter()))
 
     user_in = str(input("Save results? (y/n): "))
     if user_in.lower() == 'y':
