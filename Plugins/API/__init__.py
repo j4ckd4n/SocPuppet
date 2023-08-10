@@ -33,11 +33,15 @@ def apiMenu():
       continue
     print(f" OPTION {item}: {api_dict[item]['name']}")
   print("\n OPTION 0: Exit to Main Menu")
-  val = int(input(">> "))
-  if val not in api_dict:
-    print("Invalid value specified")
+  try:
+    val = int(input(">> "))
+    if val not in api_dict:
+      print("Invalid option specified")
+      apiMenu()
+    elif val == 0:
+      return
+    else:
+      api_dict[val]['run']()
+  except ValueError:
+    print("Invalid option specified")
     apiMenu()
-  elif val == 0:
-    return
-  else:
-    api_dict[val]['run']()

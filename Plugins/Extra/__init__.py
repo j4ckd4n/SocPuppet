@@ -41,11 +41,15 @@ def extraMenu():
       continue
     print(f" OPTION {item}: {extra_dict[item]['name']}")
   print("\n OPTION 0: Exit to Main Menu")
-  val = int(input("\n>> "))
-  if val not in extra_dict:
-    print("Invalid value specified")
+  try:
+    val = int(input("\n>> "))
+    if val not in extra_dict:
+      print("Invalid option specified")
+      extraMenu()
+    elif val == 0:
+      return
+    else:
+      extra_dict[val]['run']()
+  except ValueError:
+    print("Invalid option specified")
     extraMenu()
-  elif val == 0:
-    return
-  else:
-    extra_dict[val]['run']()
