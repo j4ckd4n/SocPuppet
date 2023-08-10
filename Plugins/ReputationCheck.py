@@ -9,6 +9,10 @@ import datetime
 
 from alive_progress import alive_bar
 
+from pygments import highlight
+from pygments.lexers.data import YamlLexer
+from pygments.formatters import TerminalFormatter
+
 class ReputationCheck(Plugin.Plugin):
   def __init__(self, value: str = None, name: str = 'ReputationCheck'):
     super().__init__(name)
@@ -27,6 +31,19 @@ class ReputationCheck(Plugin.Plugin):
     temp_path = f"temp_{random_name}"
     return os.path.join(os.getenv("TEMP"), temp_path)
   
+  def flatten_data(self, data, prefix=''):
+    flattened_data = []
+    if isinstance(data, dict):
+      for key, value in data.items():
+        flattened_data.extend(self.flatten_data(value, prefix=f'{prefix}{key}.'))
+    elif isinstance(data, list):
+      for index, item in enumerate(data):
+        flattened_data.extend(self.flatten_data(item, prefix=f'{prefix}{index}.'))
+    else:
+      flattened_data.append((prefix.rstrip('.'), data))
+
+    return flattened_data
+
   def _performListLookup(self, values: dict, skip_url_scan = False):
     lookups = {
       "virus_total_lookup": [],
@@ -66,8 +83,12 @@ class ReputationCheck(Plugin.Plugin):
           if not skip_url_scan:
             print("[RC]: urlscan not implemented yet")
           domain = re.sub("(http|https)://", "", domain)
+          print("[RC]: Performing DNS Lookup")
           dns_lookup = DNSLookup.DNSLookup()._performLookup(domain)
           lookups['dns_lookup'].append(dns_lookup)
+          print("[RC]: Performing WHOIS lookup")
+          whois_lookup = WhoIs.WhoIs()._performLookup(domain)
+          lookups['whois_lookup'] += whois_lookup
           try:
             ip = socket.gethostbyname(domain)
             if ip not in ips:
@@ -98,8 +119,9 @@ class ReputationCheck(Plugin.Plugin):
           self._jitter_sleep((0, 5))
         print("[RC]: performing whois lookups")
         for ip in ips:
-          whois_lookup = WhoIs.WhoIs()._performLookup(ip)
-          lookups['whois_lookup'].append(whois_lookup)
+          if ip not in lookups['whois_lookup']:
+            whois_lookup = WhoIs.WhoIs()._performLookup(ip)
+            lookups['whois_lookup'] += whois_lookup
           progress_bar()
         print("[RC]: performing greynoise lookups")
         for ip in ips:
@@ -134,7 +156,7 @@ class ReputationCheck(Plugin.Plugin):
         lookups['yara_scans'].append(detections)
 
     print("---=== Results ===---")
-    print(yaml.dump(lookups))
+    print(highlight(yaml.dump(lookups, sort_keys=False), YamlLexer(), TerminalFormatter()))
 
     user_in = str(input("Save results? (y/n): "))
     if user_in.lower() == 'y':

@@ -37,11 +37,16 @@ def lookupsMenu():
       continue
     print(f" OPTION {item}: {lookups_dict[item]['name']}")
   print("\n OPTION 0: Exit to Main Menu")
-  val = int(input(">> "))
-  if val not in lookups_dict:
-    print("Invalid value specified")
+
+  try:
+    val = int(input(">> "))
+    if val not in lookups_dict:
+      print("Invalid option specified")
+      lookupsMenu()
+    elif val == 0:
+      return
+    else:
+      lookups_dict[val]['run']()
+  except ValueError:
+    print("Invalid option specified")
     lookupsMenu()
-  elif val == 0:
-    return
-  else:
-    lookups_dict[val]['run']()

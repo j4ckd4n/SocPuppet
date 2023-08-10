@@ -40,12 +40,17 @@ def mainMenu():
   print(" OPTION 6: Lookup Tools")
   print(" OPTION 7: Extra (Free online lookups and tools)")
   print("\n OPTION 0: Exit Tool")
-  val = int(input(">> "))
-  if val not in mainMenu_dict:
-    print("Invalid value specified.")
+  try:
+    val = int(input(">> "))
+    if val not in mainMenu_dict:
+      print("Invalid value specified.")
+      mainMenu()
+    else:
+      mainMenu_dict[val]()
+  except ValueError:
+    print("Invalid Value specified")
     mainMenu()
-  else:
-    mainMenu_dict[val]()
+  
 
 if __name__ == "__main__":
   # TODO: need a check for this to see if the config.json file exists
