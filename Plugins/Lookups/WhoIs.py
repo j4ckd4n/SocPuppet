@@ -18,46 +18,29 @@ class WhoIs(Plugin.Plugin):
     output = []
     if not self._ip_pat.match(value):
       w = whois.whois(value)
-      output.append({
-        value: {
-          "org": w['org'],
-          "address": w['address'],
-          "city": w['city'],
-          "country": w['country'],
-          "creation_date": w['creation_date'],
-          "expiration_date": w['expiration_date'],
-          "updated_date": w['updated_date'],
-          "dnssec": w['dnssec'],
-          "domain_names": w['domain_name'],
-          "registrar": w['registrar'],
-          "status": w['status'],
-          "name": w['name'],
-          "name_servers": w['name_servers']
-        }
-      })
+      entry = {}
+      keys_to_check = ['org', 'address', 'city', 'country', 'creation_date', 'expiration_date', 'updated_date', 'dnssec', 'domain_name', 'registrar', 'status', 'name', 'name_servers']
+
+      for key in keys_to_check:
+        entry[key] = w.get(key, 'no data')
+
+      output.append({value: entry})
 
     try:
       s = socket.gethostbyname(value)
       value = s
       w = IPWhois(value)
       w = w.lookup_whois()
-      addr = str(w['nets'][0]['address'])
-      addr = addr.replace('\n', ', ')
-      output.append({
-        value: {
-          "cidr": str(w['nets'][0]['cidr']),
-          "name": str(w['nets'][0]['name']),
-          "ip_range": str(w['nets'][0]['range']),
-          "description": str(w['nets'][0]['description']),
-          "country": str(w['nets'][0]['country']),
-          "state": str(w['nets'][0]['state']),
-          "city": str(w['nets'][0]['city']),
-          "address": addr,
-          "postal_code": str(w['nets'][0]['postal_code']),
-          "created_date": str(w['nets'][0]['created']),
-          "updated_date": str(w['nets'][0]['updated'])
-        }
-      })
+      net_info = w['nets'][0]
+      keys_to_check =['cidr', 'name', 'range', 'description', 'country', 'state', 'city', 'postal_code', 'created', 'updated']
+      entry = {}
+
+      addr = net_info.get("address", "").replace("\n", ", ")
+
+      for key in keys_to_check:
+        entry[key] = str(net_info.get(key, 'no data'))
+
+      output.append({value: entry})
     except socket.gaierror as e:
       output.append({
           'err': "Domain resolution failed"
