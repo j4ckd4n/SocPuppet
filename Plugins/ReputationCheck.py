@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs
+from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar, YaraScanner
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
@@ -57,7 +57,8 @@ class ReputationCheck(Plugin.Plugin):
       "shodan_lookup": [],
       "ip_score_geo_ip": [],
       "inquest_lookup": [],
-      "yara_scans": []
+      "yara_scans": [],
+      "tor_nodes": []
     }
 
     hashes = values['hashes']
@@ -110,13 +111,15 @@ class ReputationCheck(Plugin.Plugin):
           threatfox = ThreatFox.ThreatFox()._performLookup(ip)
           lookups['threatfox_lookup'].append(threatfox)
           progress_bar()
-          self._jitter_sleep((0, 5))
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
         print("[RC]: performing internetdb lookups")
         for ip in ips:
           internetdb_lookup = InternetDB.InternetDB()._performLookup(ip)
           lookups['internetdb_lookup'].append(internetdb_lookup)
           progress_bar()
-          self._jitter_sleep((0, 5))
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
         print("[RC]: performing whois lookups")
         for ip in ips:
           if ip not in lookups['whois_lookup']:
@@ -128,26 +131,35 @@ class ReputationCheck(Plugin.Plugin):
           grey_noise = GreyNoise.GreyNoise()._performLookup(ip)
           lookups['greynoise_lookup'].append(grey_noise)
           progress_bar()
-          self._jitter_sleep((0, 5))
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
         print("[RC]: performing shodan lookups")
         for ip in ips:
           shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(ip)
           lookups['shodan_lookup'].append(shodan_lookup)
           progress_bar()
-          self._jitter_sleep((0, 5))
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
         print("[RC]: performing ipscore lookups")
         for ip in ips:
           ip_score = IPScore.IPScore()._performLookup(ip)
           lookups['ip_score_geo_ip'].append(ip_score)
           progress_bar()
-          self._jitter_sleep((0, 5))
-
-          # These take some time to complete.
-        print("[RC]: performing inquest lookups...this may take some time...")
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
+        print("[RC]: performing tor-exit-node lookups")
         for ip in ips:
-          inquest_lookup = inQuest.inQuest()._performLookup(ip)
-          lookups['inquest_lookup'].append(inquest_lookup)
+          tor = TorExitNodeLookup.TorExitNodeLookup()._performLookup(ip)
+          lookups['tor_nodes'].append(tor)
           progress_bar()
+          if len(ips) > 1:
+            self._jitter_sleep((0, 5))
+          # These take some time to complete.
+        # print("[RC]: performing inquest lookups...this may take some time...")
+        # for ip in ips:
+        #   inquest_lookup = inQuest.inQuest()._performLookup(ip)
+        #   lookups['inquest_lookup'].append(inquest_lookup)
+        #   progress_bar()
       
     if files:
       print("[RC]: performing yara scans...this may take some time...")
@@ -157,6 +169,14 @@ class ReputationCheck(Plugin.Plugin):
 
     print("---=== Results ===---")
     print(highlight(yaml.dump(lookups, sort_keys=False), YamlLexer(), TerminalFormatter()))
+
+    # TODO Formatting could be better than just a YAML dump.
+    # print("---=== Flattened ===---")
+    # for key in lookups.keys():
+    #   print(f"{key}:")
+    #   for index in lookups[key]:
+    #     print(f'  - {index}:')
+    #     print(f"    - {self.flatten_data(lookups[key][index])}")
 
     user_in = str(input("Save results? (y/n): "))
     if user_in.lower() == 'y':
