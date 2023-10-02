@@ -1,4 +1,4 @@
-from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs
+from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup
 
 lookups_dict = {
   0: {
@@ -25,6 +25,10 @@ lookups_dict = {
     "name": "Bitcoin Transaction Tracer (WIP, will ban you if ran)",
     "run": lambda: BitcoinTransactionTracer.BitcoinTransactionTracer().run()
   },
+  6: {
+    "name": "Tor Exit Node Lookup",
+    "run": lambda: TorExitNodeLookup.TorExitNodeLookup().run()
+  }
 }
 
 def lookupsMenu():

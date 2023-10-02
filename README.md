@@ -13,7 +13,7 @@ This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) to
 
 ## Contents
  - [Current Features](#socpuppet-can-currently)
- - [Requirements & Installation](#requirements-and-installation---may-not-be-fully-valid)
+ - [Requirements & Installation](#requirements-and-installation)
  - [SocPuppetAI](#socpuppetai---experimental)
  - [Development](#development)
  - [Changelog](#changelog)
