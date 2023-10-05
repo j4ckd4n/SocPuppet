@@ -68,26 +68,29 @@ class ReputationCheck(Plugin.Plugin):
     
     with alive_bar(unknown="arrows_out", monitor=False) as progress_bar:
       if hashes:
-        print("[RC]: Checking Hashes...")
         for hash in hashes:
+          print(f"[RC]: Checking hash: {hash}")
           progress_bar()
           if re.search(self._md5_pattern, hash) or re.search(self._sha1_pattern, hash) or re.search(self._sha256_pattern, hash):
+            progress_bar.text("Performing VirusTotal lookup")
             virus_total_lookup = VirusTotal.VirusTotal()._performLookup(hash)
             lookups['virus_total_lookup'].append(virus_total_lookup)
+
+            progress_bar.text("Performing MalwareBazaar lookup")
             malware_bazaar_lookup = MalwareBazaar.MalwareBazaar()._performLookup(hash)
             lookups['malware_bazaar_lookup'].append(malware_bazaar_lookup)
 
       if domains:
-        print("[RC]: Checking domains...")
         for domain in domains:
+          print(f"[RC]: Checking domain: {domain}")
           progress_bar()
           if not skip_url_scan:
             print("[RC]: urlscan not implemented yet")
           domain = re.sub("(http|https)://", "", domain)
-          print("[RC]: Performing DNS Lookup")
+          progress_bar.text("Performing DNS Lookup")
           dns_lookup = DNSLookup.DNSLookup()._performLookup(domain)
           lookups['dns_lookup'].append(dns_lookup)
-          print("[RC]: Performing WHOIS lookup")
+          progress_bar.text("Performing WHOIS lookup")
           whois_lookup = WhoIs.WhoIs()._performLookup(domain)
           lookups['whois_lookup'] += whois_lookup
           try:
@@ -100,66 +103,40 @@ class ReputationCheck(Plugin.Plugin):
       # TODO: there is a better way to do this but it will work for now.
       # Maybe implement bulk lookup underneath module?
       if ips:
-        print("[RC]: Checking IPs...")
-        print("[RC]: performing reverse lookups")
         for ip in ips:
+          print(f"[RC]: Checking IP: {ip}")
+          progress_bar.text("Performing reverse lookup")
           reverse_dns = ReverseDNSLookup.ReverseDNSLookup()._performLookup(ip)
           lookups['reverse_dns_lookup'].append(reverse_dns)
-          progress_bar()
-        print("[RC]: performing threatfox lookups")
-        for ip in ips:
+
+          progress_bar.text("Performing ThreatFox lookup")
           threatfox = ThreatFox.ThreatFox()._performLookup(ip)
           lookups['threatfox_lookup'].append(threatfox)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-        print("[RC]: performing internetdb lookups")
-        for ip in ips:
+          
+          progress_bar.text("Performing InternetDB lookup")
           internetdb_lookup = InternetDB.InternetDB()._performLookup(ip)
           lookups['internetdb_lookup'].append(internetdb_lookup)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-        print("[RC]: performing whois lookups")
-        for ip in ips:
+          
           if ip not in lookups['whois_lookup']:
+            progress_bar.text("Performing WHOIS lookup")
             whois_lookup = WhoIs.WhoIs()._performLookup(ip)
             lookups['whois_lookup'] += whois_lookup
-          progress_bar()
-        print("[RC]: performing greynoise lookups")
-        for ip in ips:
+
+          progress_bar.text("Performing GreyNoise lookup")
           grey_noise = GreyNoise.GreyNoise()._performLookup(ip)
           lookups['greynoise_lookup'].append(grey_noise)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-        print("[RC]: performing shodan lookups")
-        for ip in ips:
+
+          progress_bar.text("Performing Shodan lookup")
           shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(ip)
           lookups['shodan_lookup'].append(shodan_lookup)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-        print("[RC]: performing ipscore lookups")
-        for ip in ips:
+
+          progress_bar.text("Performing IPScore lookup")
           ip_score = IPScore.IPScore()._performLookup(ip)
           lookups['ip_score_geo_ip'].append(ip_score)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-        print("[RC]: performing tor-exit-node lookups")
-        for ip in ips:
+          
+          progress_bar.text("Checking against Tor exit nodes")
           tor = TorExitNodeLookup.TorExitNodeLookup()._performLookup(ip)
           lookups['tor_nodes'].append(tor)
-          progress_bar()
-          if len(ips) > 1:
-            self._jitter_sleep((0, 5))
-          # These take some time to complete.
-        # print("[RC]: performing inquest lookups...this may take some time...")
-        # for ip in ips:
-        #   inquest_lookup = inQuest.inQuest()._performLookup(ip)
-        #   lookups['inquest_lookup'].append(inquest_lookup)
-        #   progress_bar()
       
     if files:
       print("[RC]: performing yara scans...this may take some time...")
