@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup
+from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar, YaraScanner
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
@@ -142,6 +142,9 @@ class ReputationCheck(Plugin.Plugin):
           progress_bar.text("Checking against blocklists")
           blocklistde = BlockListDELookup.BlockListDELookup()._performLookup(ip)
           lookups['blocklists'].append({"blocklistde": blocklistde})
+          
+          sslabuse_ip = SSLAbuseIPLookup.SSLAbuseIPLookup()._performLookup(ip)
+          lookups['blocklists'].append({'sslabuse_ip': sslabuse_ip})
       
     if files:
       print("[RC]: performing yara scans...this may take some time...")

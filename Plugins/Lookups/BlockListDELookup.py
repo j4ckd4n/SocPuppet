@@ -1,6 +1,7 @@
 from Plugins import Plugin
 
 import requests, requests_cache
+import yaml
 
 from datetime import timedelta
 
@@ -18,7 +19,7 @@ class BlockListDELookup(Plugin.Plugin):
     if res.status_code != 200:
       return {
         value: {
-          "error": res.content
+          "err": res.content
         }
       }
     
@@ -35,3 +36,6 @@ class BlockListDELookup(Plugin.Plugin):
   def run(self):
     if self._ip == None:
       self._ip = input('Enter IP to lookup: ').strip()
+
+    lookup = self._performLookup(self._ip)
+    print(yaml.dump(lookup))
