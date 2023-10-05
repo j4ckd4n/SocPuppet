@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup
+from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar, YaraScanner
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
 
@@ -58,7 +58,8 @@ class ReputationCheck(Plugin.Plugin):
       "ip_score_geo_ip": [],
       "inquest_lookup": [],
       "yara_scans": [],
-      "tor_nodes": []
+      "tor_nodes": [],
+      "blocklists": []
     }
 
     hashes = values['hashes']
@@ -137,6 +138,10 @@ class ReputationCheck(Plugin.Plugin):
           progress_bar.text("Checking against Tor exit nodes")
           tor = TorExitNodeLookup.TorExitNodeLookup()._performLookup(ip)
           lookups['tor_nodes'].append(tor)
+
+          progress_bar.text("Checking against blocklists")
+          blocklistde = BlockListDELookup.BlockListDELookup()._performLookup(ip)
+          lookups['blocklists'].append({"blocklistde": blocklistde})
       
     if files:
       print("[RC]: performing yara scans...this may take some time...")
