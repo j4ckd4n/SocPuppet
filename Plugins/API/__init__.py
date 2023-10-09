@@ -1,4 +1,4 @@
-from . import GreyNoise, ShodanLookup, URLScanIO, VirusTotal
+from . import GreyNoise, ShodanLookup, URLScanIO, VirusTotal, CensysLookup
 
 api_dict = {
   0: {
@@ -20,6 +20,10 @@ api_dict = {
   4: {
     "name": "VirusTotal Search (Community API)",
     "run": lambda: VirusTotal.VirusTotal().run()
+  },
+  5: {
+    "name": "Censys.io Search",
+    "run": lambda: CensysLookup.CensysLookup().run()
   }
 }
 

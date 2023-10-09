@@ -9,3 +9,4 @@ extract_msg
 python-whois
 pygments
 alive-progress
+censys

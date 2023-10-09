@@ -2,7 +2,7 @@ from Plugins import Plugin
 
 from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar, YaraScanner
-from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal
+from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal, CensysLookup
 
 import re, socket, yaml, json, time, random, string, os
 import datetime
@@ -55,6 +55,7 @@ class ReputationCheck(Plugin.Plugin):
       "whois_lookup": [],
       "greynoise_lookup": [],
       "shodan_lookup": [],
+      "censys_lookup": [],
       "ip_score_geo_ip": [],
       "inquest_lookup": [],
       "yara_scans": [],
@@ -114,6 +115,14 @@ class ReputationCheck(Plugin.Plugin):
           threatfox = ThreatFox.ThreatFox()._performLookup(ip)
           lookups['threatfox_lookup'].append(threatfox)
           
+          progress_bar.text("Performing Censys.io lookup")
+          censys_lookup = CensysLookup.CensysLookup()._performLookup(ip)
+          lookups['censys_lookup'].append(censys_lookup)
+
+          progress_bar.text("Performing Shodan lookup")
+          shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(ip)
+          lookups['shodan_lookup'].append(shodan_lookup)
+
           progress_bar.text("Performing InternetDB lookup")
           internetdb_lookup = InternetDB.InternetDB()._performLookup(ip)
           lookups['internetdb_lookup'].append(internetdb_lookup)
@@ -126,10 +135,6 @@ class ReputationCheck(Plugin.Plugin):
           progress_bar.text("Performing GreyNoise lookup")
           grey_noise = GreyNoise.GreyNoise()._performLookup(ip)
           lookups['greynoise_lookup'].append(grey_noise)
-
-          progress_bar.text("Performing Shodan lookup")
-          shodan_lookup = ShodanLookup.ShodanLookup()._performLookup(ip)
-          lookups['shodan_lookup'].append(shodan_lookup)
 
           progress_bar.text("Performing IPScore lookup")
           ip_score = IPScore.IPScore()._performLookup(ip)
@@ -153,7 +158,8 @@ class ReputationCheck(Plugin.Plugin):
         lookups['yara_scans'].append(detections)
 
     print("---=== Results ===---")
-    print(highlight(yaml.dump(lookups, sort_keys=False), YamlLexer(), TerminalFormatter()))
+    filtered_lookups = {k: v for k, v in lookups.items() if v}
+    print(highlight(yaml.dump(filtered_lookups, sort_keys=False), YamlLexer(), TerminalFormatter()))
 
     # TODO Formatting could be better than just a YAML dump.
     # print("---=== Flattened ===---")
