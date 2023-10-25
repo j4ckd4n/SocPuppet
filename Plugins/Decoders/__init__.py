@@ -1,4 +1,4 @@
-from . import Base64Decoder, Cisco7Decoder, ProofPointDecoder, SafeLinksDecoder, UnFurlUrl, UnShortenURL, URLDecoder
+from . import Base64Decoder, Cisco7Decoder, ProofPointDecoder, SafeLinksDecoder, UnShortenURL, URLDecoder
 
 decoders_dict = {
   0: {
@@ -16,10 +16,6 @@ decoders_dict = {
   3: {
     "name": "Base64 Decoder",
     "run": lambda: Base64Decoder.Base64Decoder().run()
-  },
-  4: {
-    "name": "UnFurlURL",
-    "run": lambda: UnFurlUrl.UnFurlURL().run()
   },
   5: {
     "name": "Unshorten URL",

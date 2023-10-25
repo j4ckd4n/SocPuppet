@@ -1,4 +1,4 @@
-from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs
+from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup, PhishingDatabase
 
 lookups_dict = {
   0: {
@@ -25,6 +25,22 @@ lookups_dict = {
     "name": "Bitcoin Transaction Tracer (WIP, will ban you if ran)",
     "run": lambda: BitcoinTransactionTracer.BitcoinTransactionTracer().run()
   },
+  6: {
+    "name": "Tor Exit Node Lookup",
+    "run": lambda: TorExitNodeLookup.TorExitNodeLookup().run()
+  }, 
+  7: {
+    "name": "BlockListDE blocklist Lookup",
+    "run": lambda: BlockListDELookup.BlockListDELookup().run()
+  },
+  8: {
+    "name": "SSLAbuse IP lookup",
+    "run": lambda: SSLAbuseIPLookup.SSLAbuseIPLookup().run()
+  },
+  9: {
+    "name": "Phishing Database Lookup",
+    "run": lambda: PhishingDatabase.PhishingDatabase().run()
+  }
 }
 
 def lookupsMenu():

@@ -53,6 +53,7 @@ class YaraScanner(Plugin.Plugin):
           continue
         with open(os.path.join(self._local_temp_file_cache, rlink.split('/')[-1]), "w+") as f:
           f.write(rule.text)
+        bar.text(f"'{rlink.split('/')[-1]}' rule was downloaded.")
         rules.append((rlink, rule.text))
     return rules
 
@@ -70,6 +71,7 @@ class YaraScanner(Plugin.Plugin):
           continue
         rule_path = os.path.join(self._local_yara_cache_path, rule_link.split('/')[-1])
         compiled.save(rule_path)
+        bar.text(f"'{rule_link.split('/')[-1]}' was compiled")
         compiled_rules_path_list.append(rule_path)
         bar()
     return compiled_rules_path_list
