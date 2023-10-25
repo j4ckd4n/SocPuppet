@@ -1,6 +1,6 @@
 from Plugins import Plugin
 
-from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup
+from Plugins.Lookups import DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup, PhishingDatabase
 from Plugins.Extra import ThreatFox, InternetDB, IPScore, inQuest, MalwareBazaar, YaraScanner
 from Plugins.API import URLScanIO, ShodanLookup, GreyNoise, VirusTotal, CensysLookup
 
@@ -60,7 +60,8 @@ class ReputationCheck(Plugin.Plugin):
       "inquest_lookup": [],
       "yara_scans": [],
       "tor_nodes": [],
-      "blocklists": []
+      "blocklists": [],
+      "phishing_database_lookup": []
     }
 
     hashes = values['hashes']
@@ -95,6 +96,11 @@ class ReputationCheck(Plugin.Plugin):
           progress_bar.text("Performing WHOIS lookup")
           whois_lookup = WhoIs.WhoIs()._performLookup(domain)
           lookups['whois_lookup'] += whois_lookup
+
+          progress_bar.text("Performing Phishing.Database lookup")
+          phishing_database_lookup = PhishingDatabase.PhishingDatabase()._performLookup(domain)
+          if phishing_database_lookup is not None:
+            lookups['phishing_database_lookup'] += phishing_database_lookup
           try:
             ip = socket.gethostbyname(domain)
             if ip not in ips:
@@ -143,6 +149,11 @@ class ReputationCheck(Plugin.Plugin):
           progress_bar.text("Checking against Tor exit nodes")
           tor = TorExitNodeLookup.TorExitNodeLookup()._performLookup(ip)
           lookups['tor_nodes'].append(tor)
+
+          progress_bar.text("Performing Phishing.Database lookup")
+          phishing_database_lookup = PhishingDatabase.PhishingDatabase()._performLookup(ip)
+          if phishing_database_lookup is not None:
+            lookups['phishing_database_lookup'] += phishing_database_lookup
 
           progress_bar.text("Checking against blocklists")
           blocklistde = BlockListDELookup.BlockListDELookup()._performLookup(ip)

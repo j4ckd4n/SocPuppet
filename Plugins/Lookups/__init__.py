@@ -1,4 +1,4 @@
-from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup
+from . import BitcoinAddress, BitcoinTransactionTracer, DNSLookup, ReverseDNSLookup, WhoIs, TorExitNodeLookup, BlockListDELookup, SSLAbuseIPLookup, PhishingDatabase
 
 lookups_dict = {
   0: {
@@ -36,6 +36,10 @@ lookups_dict = {
   8: {
     "name": "SSLAbuse IP lookup",
     "run": lambda: SSLAbuseIPLookup.SSLAbuseIPLookup().run()
+  },
+  9: {
+    "name": "Phishing Database Lookup",
+    "run": lambda: PhishingDatabase.PhishingDatabase().run()
   }
 }
 
