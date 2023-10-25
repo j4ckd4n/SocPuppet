@@ -18,14 +18,10 @@ decoders_dict = {
     "run": lambda: Base64Decoder.Base64Decoder().run()
   },
   5: {
-    "name": "Unshorten URL",
-    "run": lambda: UnShortenURL.UnShortenURL().run()
-  },
-  6: {
     "name": "URL Decoder",
     "run": lambda: URLDecoder.URLDecoder().run()
   },
-  7: {
+  6: {
     "name": "Cisco7 Decoder",
     "run": lambda: Cisco7Decoder.Cisco7Decoder().run()
   },

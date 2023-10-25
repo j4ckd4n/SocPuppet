@@ -1,7 +1,5 @@
 requests
 ipwhois
-#dfir-unfurl
-gpt4all
 pywin32; sys_platform == 'win32'
 yara-python
 pyyaml
