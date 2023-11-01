@@ -1,6 +1,7 @@
 use super::Plugin;
 use serde_json;
-use std::io::{self, Write};
+
+use crate::utils::get_input;
 
 pub struct URLSanitize {}
 
@@ -18,13 +19,8 @@ impl Plugin for URLSanitize {
     println!(" U R L   S A N I T I Z E   T O O L ");
     println!(" --------------------------------- ");
 
-    let mut input_url = String::new();
-    print!("Enter URL to sanitize: ");
-    io::stdout().flush().expect("Failed to flush stdio");
-    
-    io::stdin().read_line(&mut input_url).expect("Failed to read input");
-    let input_url = input_url.trim();
-    match self.perform_lookup(input_url) {
+    let input_url = get_input("Enter a URL to sanitize: ");
+    match self.perform_lookup(&input_url) {
       Ok(result) => println!("\n{}", result),
       Err(error) => eprintln!("Error: {}", error),
     }

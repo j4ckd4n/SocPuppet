@@ -1,9 +1,10 @@
 mod plugins;
+mod utils;
 
 use plugins::Plugin;
-use plugins::url_sanitize::URLSanitize;
+use crate::plugins::decoders::url_decoder::URLDecode;
 
 fn main() {
-    let url_sani = URLSanitize::new();
+    let url_sani = URLDecode::new();
     url_sani.run();
 }

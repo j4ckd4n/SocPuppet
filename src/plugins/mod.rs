@@ -1,4 +1,6 @@
 pub(crate) mod url_sanitize;
+pub(crate) mod decoders;
+
 use serde_json;
 
 pub trait Plugin {
