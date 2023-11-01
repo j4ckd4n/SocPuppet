@@ -7,6 +7,7 @@ pub(crate) mod base64_decoder;
 pub(crate) mod url_decoder;
 pub(crate) mod safelinks_decoder;
 pub(crate) mod proofpoint_decoder;
+pub(crate) mod unshorten_url;
 
 fn decoders_menu_dict() -> BTreeMap<i32, (String, Box<dyn Fn()>)> {
   let mut map: BTreeMap<i32, (String, Box<dyn Fn()>)> = BTreeMap::new();
@@ -14,6 +15,7 @@ fn decoders_menu_dict() -> BTreeMap<i32, (String, Box<dyn Fn()>)> {
   map.insert(1, ("Base64 Decoder".to_string(), Box::new(|| base64_decoder::Base64Decoder::new().run())));
   map.insert(2, ("SafeLinks Decoder".to_string(), Box::new(|| safelinks_decoder::SafeLinksDecode::new().run())));
   map.insert(3, ("ProofPoint Decoder".to_string(), Box::new(|| proofpoint_decoder::ProofPointDecode::new().run())));
+  map.insert(4, ("Unshorten URL".to_string(), Box::new(|| unshorten_url::UnshortenUrl::new().run())));
 
   map
 }
