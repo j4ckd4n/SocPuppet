@@ -4,11 +4,13 @@ use crate::plugins::Plugin;
 use crate::utils::get_input;
 
 pub(crate) mod internetdb_lookup;
+pub(crate) mod ipscore_lookup;
 
 fn api_lookups_menu_dict() -> BTreeMap<i32, (String, Box<dyn Fn()>)> {
   let mut map: BTreeMap<i32, (String, Box<dyn Fn()>)> = BTreeMap::new();
   map.insert(0, ("Exit menu".to_string(), Box::new(|| {})));
   map.insert(1, ("InternetDB Lookup".to_string(), Box::new(|| internetdb_lookup::InternetDBLookup::new().run())));
+  map.insert(2, ("IP-Score Lookup".to_string(), Box::new(|| ipscore_lookup::IPScoreLookup::new().run())));
 
   map
 }
