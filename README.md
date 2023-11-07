@@ -11,11 +11,6 @@ SocPuppet is a tool developed with the task of aiding SOC analysts with automati
 
 This tool is a fork of the [Sooty](https://github.com/TheresAFewConors/Sooty) tool developed by [TheresAFewConors](https://github.com/TheresAFewConors).
 
-## Support
-You can support this project by visiting my [Ko-Fi](https://ko-fi.com/j4ckd4n) page!
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z0QV34Q)
-
 ## Contents
  - [Current Features](#socpuppet-can-currently)
  - [Requirements & Installation](#requirements-and-installation)
