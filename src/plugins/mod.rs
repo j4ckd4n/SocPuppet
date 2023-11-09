@@ -1,6 +1,7 @@
 pub(crate) mod url_sanitize;
 pub(crate) mod decoders;
 pub(crate) mod api_lookups;
+pub(crate) mod standard_lookups;
 
 use serde_json;
 
