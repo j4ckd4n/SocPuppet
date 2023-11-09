@@ -55,6 +55,6 @@ impl Plugin for InQuestLookup {
     match self.perform_lookup(&usr_in.trim()) {
       Ok(result) => println!("\n{}", result),
       Err(error) => eprintln!("Error: {}", error)
-    }   
+    }
   }
 }
