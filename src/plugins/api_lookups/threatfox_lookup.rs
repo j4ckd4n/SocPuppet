@@ -55,7 +55,7 @@ impl Plugin for ThreatFoxLookup {
   }
 
   fn perform_lookup(&self, value: &str) -> Result<serde_json::Value, String> {
-    Ok::<Value, String>(serde_json::json!(String::from("Non-functional at this time. Working on a fix.")));
+    return Ok::<Value, String>(serde_json::json!(String::from("Non-functional at this time. Working on a fix.")));
 
     let url = String::from("https://threatfox-api.abuse.ch/api/v1");
 
