@@ -4,10 +4,7 @@ import Plugins.Config as Config
 
 import yara, requests, os, tkinter.filedialog, yaml
 
-
 from alive_progress import alive_bar
-from progress.bar import FillingSquaresBar as Bar
-from progress.spinner import Spinner
 
 class YaraScanner(Plugin.Plugin):
   def __init__(self, file_path: str = None, name: str = 'YaraScanner'):

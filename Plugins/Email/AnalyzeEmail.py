@@ -76,17 +76,17 @@ class AnalyzeEmail(Plugin.Plugin):
 
       if len(found_ips) == 0:
         return None
-      
+
       return found_ips
     except Exception as e:
       print(f"Err: {e}")
       return None
 
   def _isPrivate(self, ip) -> bool:
-    priv_lo = re.compile("^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
-    priv_24 = re.compile("^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
-    priv_20 = re.compile("^192\.168\.\d{1,3}.\d{1,3}$")
-    priv_16 = re.compile("^172.(1[6-9]|2[0-9]|3[0-1]).[0-9]{1,3}.[0-9]{1,3}$")
+    priv_lo = re.compile(r"^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+    priv_24 = re.compile(r"^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+    priv_20 = re.compile(r"^192\.168\.\d{1,3}.\d{1,3}$")
+    priv_16 = re.compile(r"^172.(1[6-9]|2[0-9]|3[0-1]).[0-9]{1,3}.[0-9]{1,3}$")
 
     res = priv_lo.match(ip) or priv_24.match(ip) or priv_20.match(ip) or priv_16.match(ip)
     return True if res else False
@@ -99,7 +99,7 @@ class AnalyzeEmail(Plugin.Plugin):
   def _parse_eml(self, path) -> dict:
     with open(path, 'rb') as f:
       msg = BytesParser(policy=policy.default).parse(f)
-    
+
     return {
       "sender": msg.get_all('from', 'n/a'),
       'to': msg.get_all('to', 'n/a'),
